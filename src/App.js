@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from "react";
 import jwtDecode from 'jwt-decode';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function App() {
   const [email, setEmail] = useState('');
@@ -83,7 +83,7 @@ function App() {
                 <div className='text-center'>
                     <p className='text-black inline-block'>
                         Don't have an account? 
-                        <a className='ml-5 italic underline text-blue-800' href="/">Sign Up</a>
+                        <Link to="/SignUp" className='ml-5 italic underline text-blue-800'>Sign Up</Link>
                     </p>
                 </div>
               </form>
