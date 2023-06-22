@@ -72,7 +72,7 @@ function SignUp() {
   return (
     <div className="flex items-center w-full h-screen bg-[url('./assets/backgroundImage.jpeg')] bg-cover bg-center text-white relative">
       <div className="align-items-center absolute w-1/3 left-20 shadow-2xl">
-        <div class="p-7 w-full bg-white">
+        <div className="p-7 w-full bg-white">
           <div className='text-center'><h1 className='text-black text-4xl mb-5 font-extrabold'>Sign Up</h1></div>
           <div className='text-center text-black font-bold text-lg mb-3'>Explore <span className=' text-green-700'>delightful and enticing</span> Vietnamese recipes!</div> 
           <div>

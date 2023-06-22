@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from "react";
-import {RiSearch2Line, RiMapPinLine, RiArrowDownSLine, RiArrowUpLine} from 'react-icons/ri';
+import React from "react";
 
 
 function Banner(){

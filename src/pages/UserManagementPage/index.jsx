@@ -33,8 +33,11 @@ const UserList = () => {
             'Authorization': `Bearer ${token}`, 
             'Content-Type': 'application/json'
         })});
+        alert(res);
         if(res.status === 200){
-            const data = await res.json();
+            alert(res.status);
+            const data = await JSON.stringify(res);
+            alert(data);
             setUsers(data.items);
         }
     }
