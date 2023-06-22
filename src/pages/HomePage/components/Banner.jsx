@@ -4,24 +4,18 @@ import {RiSearch2Line, RiMapPinLine, RiArrowDownSLine, RiArrowUpLine} from 'reac
 
 function Banner(){
     return(
-        <section className="h-full max-h-[640px] mb-8 xl:mb-24 mt-8">
-            <div className="flex flex-col lg:flex-row">
-                <div className="lg:ml-8 xl:ml-[135px] flex flex-col items-center lg:items-start text-center lg:text-left justify-center
-                    flex-1 px-4 lg:px-0">
-                    <h1 className="text-4xl lg:text-[58px] font-semibold leading-none mb-6">
-                        <span className="text-violet-700">Join</span> And<span className="text-violet-700"> Cook</span> With Us.</h1>
+        <div className="max-w-[1640px] mx-auto p-4">
+            <div className="max-h-[700px] relative">
+                {/* Overlay */}
+                <div className="absolute w-full h-full text-gray-200 max-h-[700px] bg-black/40 flex flex-col justify-center">
+                    <h1 className="px-4 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold">Các 
+                        <span className="text-orange-600"> công thức</span> nấu ăn</h1>
+                    <h1 className="px-4 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold">
+                        <span className="text-orange-600">tuyệt vời</span> nhất!</h1>
                 </div>
-                <div className="hidden flex-1 lg:flex justify-end items-end ml-2">
-                    <img className="rounded-tl-2xl" src="https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt=""/>
-                </div>
+                <img className="w-full max-h-[700px] object-cover" src="https://images.unsplash.com/photo-1590420882553-4f9150b71f92?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1165&q=80" alt="/" />
             </div>
-            <div className="px-[3px] py-6 max-w-[1170px] mx-auto flex flex-col lg:flex-row justify-between gap-4 lg:gap-x-3 relative 
-                lg:-top-4 lg:shadow-1 bg-white lg:bg-transparent lg:backdrop-blur rounded-lg">
-                <button className="bg-violet-700 hover:bg-violet-800 transition w-full lg:max-w-[162px] h-16 rounded-lg flex 
-                    justify-center items-center text-white text-lg">
-                    <RiSearch2Line /></button>
-            </div>
-        </section>
+        </div>
     );
 }
 

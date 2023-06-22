@@ -8,9 +8,7 @@
 
 
 @layer base{
-  body{
-    @apply font-[Poppins] bg-[#F6F3E9]
-  }
+  
 
   li{
     @apply p-4
