@@ -9,10 +9,10 @@ function Banner(){
                 <div className="lg:ml-8 xl:ml-[135px] flex flex-col items-center lg:items-start text-center lg:text-left justify-center
                     flex-1 px-4 lg:px-0">
                     <h1 className="text-4xl lg:text-[58px] font-semibold leading-none mb-6">
-                        <span className="text-violet-700">Rent</span> Your Dream Room With Us.</h1>
+                        <span className="text-violet-700">Join</span> And<span className="text-violet-700"> Cook</span> With Us.</h1>
                 </div>
                 <div className="hidden flex-1 lg:flex justify-end items-end ml-2">
-                    <img className="rounded-tl-2xl" src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=958&q=80" alt=""/>
+                    <img className="rounded-tl-2xl" src="https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt=""/>
                 </div>
             </div>
             <div className="px-[3px] py-6 max-w-[1170px] mx-auto flex flex-col lg:flex-row justify-between gap-4 lg:gap-x-3 relative 
