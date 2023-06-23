@@ -34,6 +34,9 @@ function SignUp() {
     setPasword(event.target.value);
   };
   const handleConfirmPasswordChange = event => {
+    if(event.target.value !== password){
+
+    }
     setConfirmPasword(event.target.value);
   };
 
@@ -87,11 +90,12 @@ function SignUp() {
                 </div>
                 <div className="mb-4">
                   <input className='border border-gray-300 p-3 w-full rounded-3xl font-sans text-base text-black focus:outline-0' 
-                  type="password" placeholder="Confirm Password" required onChange={handleConfirmPasswordChange} value={confirmPassword} minLength={6} maxLength={50}/>
+                  type="password" placeholder="Confirm Password" required onChange={handleConfirmPasswordChange} value={confirmPassword} 
+                  minLength={6} maxLength={50}/>
                 </div>
                 <div className="mb-4">
                   <input className='border border-gray-300 p-3 w-full rounded-3xl font-sans text-base text-black focus:outline-0' 
-                  type="text" placeholder="Username" required onChange={handleNameChange} value={name} minLength={6} maxLength={50}/>
+                  type="text" placeholder="Username" required onChange={handleNameChange} value={name} minLength={1} maxLength={50}/>
                 </div>
                 <div className="mb-4">
                   <input className='border border-gray-300 p-3 w-full rounded-3xl font-sans text-base text-black focus:outline-0' 

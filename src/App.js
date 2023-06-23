@@ -77,7 +77,7 @@ function App() {
                 </div>
                 <div className="mb-4">
                   <input className='border border-gray-300 p-3 w-full rounded-3xl font-sans text-base text-black focus:outline-0' 
-                  type="password" placeholder="Password" required onChange={handlePasswordChange} value={password} minLength={6} maxLength={50}/>
+                  type="password" placeholder="Password" required onChange={handlePasswordChange} value={password} minLength={1} maxLength={50}/>
                 </div>
                 <div className="mb-4">
                   <button className=' bg-gray-700 p-3 w-full rounded-3xl font-sans text-base text-white hover:bg-gray-500' type='submit'>Login</button>
