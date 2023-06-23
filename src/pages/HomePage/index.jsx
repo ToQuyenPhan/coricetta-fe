@@ -33,6 +33,10 @@ function Home() {
       }
   }
 
+  const getRecipe = (id) => {
+      navigate('/', {state: {recipeId: id}});
+  }
+
     useEffect(() => {
         if(localStorage){
           var role = localStorage.getItem('Role');
@@ -64,7 +68,7 @@ function Home() {
                               <span key={category.id} className="px-2">{category.categoryName}</span>
                           ))}
                           <br></br>
-                          <button className="border border-white rounded-xl px-5 py-1 bg-white text-black mx-2 absolute bottom-4">
+                          <button onClick={() => getRecipe(recipe.id)} className="border border-white rounded-xl px-5 py-1 bg-white text-black mx-2 absolute bottom-4">
                             Xem chi tiết!</button>
                       </div>
                       <img className="max-h-[160px] md:max-h-[200px] w-full object-cover rounded-xl" src={recipe.image} alt="/" />
