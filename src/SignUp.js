@@ -15,13 +15,13 @@ function SignUp() {
   let headers = new Headers();
   headers.append('Content-Type', 'application/json');
 
-  let url = "https://localhost:44327/api/Users/Signup";
+  let url = "https://localhost:44327/api/Users/signup";
 
   useEffect(() => {
     if(localStorage){
       var role = localStorage.getItem('Role');
       if(role === 'USER'){
-        //navigate
+        navigate('/home');
       }
     }
 }, [message])
@@ -34,9 +34,6 @@ function SignUp() {
     setPasword(event.target.value);
   };
   const handleConfirmPasswordChange = event => {
-    if(event.target.value !== password){
-
-    }
     setConfirmPasword(event.target.value);
   };
 
@@ -50,7 +47,7 @@ function SignUp() {
 
   const fetchUserData = async (e) => {
     e.preventDefault();
-    const res = await fetch(url, { mode: 'cors', method: 'POST', headers: headers, body: JSON.stringify({ "email" : email, "password": password, "confirmPassword" : confirmPassword, "name": name, "phone" : phone})});
+    const res = await fetch(url, { mode: 'cors', method: 'POST', headers: headers, body: JSON.stringify({ "email" : email, "password": password, "confirmPassword" : confirmPassword, "username": name, "phoneNumber" : phone})});
     if (res.status === 200) {
       Swal.fire({
         position: 'center',
@@ -59,7 +56,6 @@ function SignUp() {
         showConfirmButton: false,
         timer: 1500
       });
-      navigate('/');
     } else {
       const data = await res.text();
       setMessage(data);
