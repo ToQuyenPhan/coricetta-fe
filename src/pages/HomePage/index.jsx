@@ -18,7 +18,6 @@ function Home() {
         if(res.status === 200){
             const data = await res.json();
             setRecipes(data.items);
-            //alert(await JSON.stringify(data));
         }
     }
 
