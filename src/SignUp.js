@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from "react";
 import Swal from 'sweetalert2';
 import { useNavigate, Link } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
 function SignUp() {
   const [email, setEmail] = useState('');
@@ -49,6 +50,9 @@ function SignUp() {
     e.preventDefault();
     const res = await fetch(url, { mode: 'cors', method: 'POST', headers: headers, body: JSON.stringify({ "email" : email, "password": password, "confirmPassword" : confirmPassword, "username": name, "phoneNumber" : phone})});
     if (res.status === 200) {
+      const data = await res.text();
+      localStorage.setItem("Token", data);
+      localStorage.setItem("Role", jwtDecode(data).Role);
       Swal.fire({
         position: 'center',
         icon: 'success',
