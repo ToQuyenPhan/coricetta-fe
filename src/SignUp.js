@@ -45,7 +45,6 @@ function SignUp() {
     setPhone(event.target.value);
   };
 
-
   const fetchUserData = async (e) => {
     e.preventDefault();
     const res = await fetch(url, { mode: 'cors', method: 'POST', headers: headers, body: JSON.stringify({ "email" : email, "password": password, "confirmPassword" : confirmPassword, "username": name, "phoneNumber" : phone})});

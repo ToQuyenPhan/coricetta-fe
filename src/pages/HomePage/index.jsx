@@ -8,9 +8,26 @@ function Home() {
     const [categories, setCategories] = useState([]);
     const token = localStorage.getItem('Token');
     const navigate = useNavigate();
+    let url = "https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=3";
 
-    const fetchRecipeData = async () => {
-        const res = await fetch("https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=3", { mode: 'cors', method: 'GET', headers: new Headers({
+    const fetchRecipeData = async (level,category) => {      
+        switch(level){
+          case 'easy':
+            url = url + "&level=0"; 
+            break;
+          case 'normal':
+            url = url + "&level=1"; 
+            break;
+          case 'hard':
+            url = url + "&level=2"; 
+            break;
+          default:
+            break;
+        }
+        if(category > 0){
+          url = url + "&categoryId=" + category;
+        }
+        const res = await fetch(url, { mode: 'cors', method: 'GET', headers: new Headers({
             'Authorization': `Bearer ${token}`, 
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -43,7 +60,7 @@ function Home() {
           if(role !== 'USER'){
             navigate('/');
           }else{
-            fetchRecipeData();
+            fetchRecipeData('all', 0);
             fetchCategoryData();
           }
         }
@@ -86,11 +103,12 @@ function Home() {
                 <p className="font-bold text-gray-700">Các loại món ăn</p>
                 <div className="flex justify-between flex-wrap">
                     <button className="border border-orange-600 text-orange-600 rounded-xl px-5 py-1 hover:bg-orange-600
-                     hover:text-white m-1">Tất cả</button>
+                     hover:text-white m-1" onClick={() => fetchRecipeData('all', 0)}>Tất cả</button>
                     {categories.length > 0 && (
                         categories.map(category => (
                           <button key={category.id} className="border rounded-xl px-5 py-1 border-orange-600 text-orange-600
-                          hover:bg-orange-600 hover:text-white m-1">{category.categoryName}</button>
+                          hover:bg-orange-600 hover:text-white m-1" onClick={() => fetchRecipeData('all', category.id)}>
+                            {category.categoryName}</button>
                         )))}
                 </div>
             </div>  
@@ -99,13 +117,13 @@ function Home() {
                 <p className="font-bold text-gray-700">Độ khó:</p>
                 <div className="flex justify-between max-w-[390px] w-full">
                   <button className="border rounded-xl px-5 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
-                    hover:text-white m-1">Tất cả</button>
+                    hover:text-white m-1" onClick={() => fetchRecipeData('all', 0)}>Tất cả</button>
                   <button className="border rounded-xl px-5 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
-                    hover:text-white m-1">Dễ</button>
+                    hover:text-white m-1" onClick={() => fetchRecipeData('easy', 0)}>Dễ</button>
                   <button className="border rounded-xl px-5 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
-                    hover:text-white m-1">Trung bình</button>
+                    hover:text-white m-1" onClick={() => fetchRecipeData('normal', 0)}>Trung bình</button>
                   <button className="border rounded-xl px-5 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
-                    hover:text-white m-1">Khó</button>
+                    hover:text-white m-1" onClick={() => fetchRecipeData('hard', 0)}>Khó</button>
                 </div>
               </div>            
           </div>
