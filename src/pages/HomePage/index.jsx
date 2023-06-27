@@ -5,10 +5,11 @@ import Banner from "./components/Banner";
 
 function Home() {
     const [recipes, setRecipes] = useState([]);
+    const [heroes, setHeroes] = useState([]);
     const [categories, setCategories] = useState([]);
     const token = localStorage.getItem('Token');
     const navigate = useNavigate();
-    let url = "https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=3";
+    let url = "https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=8";
 
     const fetchRecipeData = async (level,category) => {      
         switch(level){
@@ -38,6 +39,18 @@ function Home() {
         }
     }
 
+    const fetchHeroData = async () => {     
+      const res = await fetch("https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=3", { mode: 'cors', method: 'GET', headers: new Headers({
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+      })});
+      if(res.status === 200){
+          const data = await res.json();
+          setHeroes(data.items);
+      }
+  }
+
     const fetchCategoryData = async () => {
       const res = await fetch("https://localhost:44327/api/Categories/all", { mode: 'cors', method: 'GET', headers: new Headers({
           'Authorization': `Bearer ${token}`, 
@@ -60,6 +73,7 @@ function Home() {
           if(role !== 'USER'){
             navigate('/');
           }else{
+            fetchHeroData();
             fetchRecipeData('all', 0);
             fetchCategoryData();
           }
@@ -73,7 +87,7 @@ function Home() {
       <div>
         {recipes.length > 0 && (
             <div className="max-w-[1640px] mx-auto p-4 py-12 grid md:grid-cols-3 gap-6">
-              {recipes.map(recipe => (
+              {heroes.map(recipe => (
                   <div key={recipe.id} className="rounded-xl relative">
                       {/* Overlay */}
                       <div className="absolute w-full h-full bg-black/50 rounded-xl text-white">
