@@ -59,12 +59,12 @@ function RecipeDetail() {
           Đang tải...
         </div>
       ) : (
-        <section class="section blog-wrap bg-gray">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8">
-                <div class="row">
-                  <div class="col-lg-12 mb-5">
+        <section className="section blog-wrap bg-gray">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-8">
+                <div className="row">
+                  <div className="col-lg-12 mb-5">
                     <div className="single-blog-item">
                       <img
                         src={recipe?.image}
@@ -105,8 +105,8 @@ function RecipeDetail() {
                         <div>
       <h3>Categories</h3>
       <ul>
-        {recipe.categories.map((category) => (
-          <li key={category.id}>{category.categoryName}</li>
+        {recipe.categories.map((category, index) => (
+          <li key={index}>{category.categoryName}</li>
         ))}
       </ul>
 

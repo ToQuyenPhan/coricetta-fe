@@ -1,10 +1,15 @@
 import React from "react";
 import { Popover} from '@headlessui/react';
 import {AiOutlineMenu, AiOutlineSearch} from 'react-icons/ai'
+import { useNavigate} from 'react-router-dom';
 
 
-function Header() {
+function Header() {  
+    const navigate = useNavigate();
 
+    const getUserId = () => {
+        navigate('/myRecipes');
+    }
   return (
     <div className="max-w-[1640px] mx-auto flex justify-between items-center p-4">
         {/* Left side */}
@@ -30,8 +35,8 @@ function Header() {
                 <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
                     Menus
                 </a>
-                <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-                    My Recipes
+                <a  className="text-sm font-semibold leading-6 text-gray-900">
+                    <button onClick={() => getUserId()}>My Recipes</button>
                 </a>
                 <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
                     User
