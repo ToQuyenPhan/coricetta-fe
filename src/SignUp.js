@@ -47,6 +47,7 @@ function SignUp() {
 
   const fetchUserData = async (e) => {
     e.preventDefault();
+    alert(JSON.stringify({ "email" : email, "password": password, "confirmPassword" : confirmPassword, "username": name, "phoneNumber" : phone}));
     const res = await fetch(url, { mode: 'cors', method: 'POST', headers: headers, body: JSON.stringify({ "email" : email, "password": password, "confirmPassword" : confirmPassword, "username": name, "phoneNumber" : phone})});
     if (res.status === 200) {
       const data = await res.text();
@@ -59,6 +60,8 @@ function SignUp() {
         showConfirmButton: false,
         timer: 1500
       });
+      alert("Successfully!");
+      navigate('/home');
     } else {
       const data = await res.text();
       setMessage(data);
@@ -101,7 +104,7 @@ function SignUp() {
                   type='text' placeholder="Phone number" required onChange={handlePhoneChange} value={phone} />
                 </div>
                 <div className="mb-4">
-                  <button className=' bg-gray-700 p-3 w-full rounded-3xl font-sans text-base text-white hover:bg-gray-500' type='submit'>SignUp</button>
+                  <button className=' bg-gray-700 p-3 w-full rounded-3xl font-sans text-base text-white hover:bg-gray-500' type='submit'>Sign Up</button>
                 </div>
                 <div className='text-center'>
                     <p className='text-black inline-block'>
