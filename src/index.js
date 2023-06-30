@@ -6,6 +6,7 @@ import Home from './pages/HomePage';
 import UserList from './pages/UserManagementPage';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import SignUp from './SignUp';
+import RecipDetails from './pages/RecipeDetailsPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,6 +16,7 @@ root.render(
       <Route exact path="/home" element={<Home/>}/>
       <Route exact path="/users" element={<UserList/>}/>
       <Route exact path="/signup" element={<SignUp/>}/>
+      <Route exact path="/recipeDetails" element={<RecipDetails/>}/>
     </Routes>
   </BrowserRouter>
 );
