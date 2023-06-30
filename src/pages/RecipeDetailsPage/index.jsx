@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "./components/Header";
-import Banner from "./components/Banner";
 import Comment from "./components/comment";
 import "./index.css";
 
-function RecipeDetail() {
+function RecipeDetails() {
   const [recipe, setRecipe] = useState(null);
   const token = localStorage.getItem("Token");
   //const navigate = useNavigate();
@@ -43,7 +42,6 @@ function RecipeDetail() {
   return (
     <div className="w-full">
       <Header />
-      <Banner />
       {!recipe ? (
         <div
           style={{
@@ -156,4 +154,4 @@ function RecipeDetail() {
   );
 }
 
-export default RecipeDetail;
+export default RecipeDetails;

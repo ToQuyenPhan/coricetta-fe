@@ -1,6 +1,8 @@
-import React from "react";
+import React, { Fragment} from "react";
 import { Popover} from '@headlessui/react';
 import {AiOutlineMenu, AiOutlineSearch} from 'react-icons/ai'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { Transition } from '@headlessui/react'
 
 
 function Header() {
@@ -33,9 +35,31 @@ function Header() {
                 <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
                     My Recipes
                 </a>
-                <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-                    User
-                </a>
+                <Popover className="relative">
+            <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
+              User
+              <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+            </Popover.Button>
+
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-200"
+              enterFrom="opacity-0 translate-y-1"
+              enterTo="opacity-100 translate-y-0"
+              leave="transition ease-in duration-150"
+              leaveFrom="opacity-100 translate-y-0"
+              leaveTo="opacity-0 translate-y-1"
+            >
+                <Popover.Panel className="absolute -left-28 top-full z-10 mt-3 w-screen max-w-[200px] overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                <div className="p-4">
+                <a href="#">Create a Recipe</a>
+                </div>
+                <div className="p-4">
+                  <a href="#">Create a Recipe</a>
+                </div>
+              </Popover.Panel>
+                 </Transition>
+            </Popover>
             </Popover.Group>
         </div>    
     </div>
