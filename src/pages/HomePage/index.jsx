@@ -34,7 +34,7 @@ function Home() {
   }
 
   const getRecipe = (id) => {
-      navigate('/', {state: {recipeId: id}});
+      navigate('/recipeDetails', {state: {recipeId: id}});
   }
 
     useEffect(() => {
