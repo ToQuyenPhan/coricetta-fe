@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import Home from './pages/HomePage';
+import RecipDetails from './pages/RecipeDetailsPage';
 import UserList from './pages/UserManagementPage';
+import MyRecipes from './pages/PersonalPage';
+import MyProfile from './pages/ProfilePage';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import SignUp from './SignUp';
 import RecipDetails from './pages/RecipeDetailsPage';
@@ -18,7 +21,8 @@ root.render(
       <Route exact path="/users" element={<UserList/>}/>
       <Route exact path="/signup" element={<SignUp/>}/>
       <Route exact path="/recipeDetails" element={<RecipDetails/>}/>
-      <Route exact path="/create-menu" element={<CreateMenu/>}/>
+      <Route exact path="/myRecipes" element={<MyRecipes/>}/>
+      <Route exact path="/profile" element={<MyProfile/>}/>
     </Routes>
   </BrowserRouter>
 );

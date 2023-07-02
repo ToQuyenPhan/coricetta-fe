@@ -43,8 +43,7 @@ function RecipeDetail() {
   return (
     <div className="w-full">
       <Header />
-      <br />
-      <br /><br /><br />
+      <Banner />
       {!recipe ? (
         <div
           style={{
@@ -122,6 +121,7 @@ function RecipeDetail() {
           </div>
         </section>
       )}
+      {/* <Comment/> */}
     </div>
   );
 }

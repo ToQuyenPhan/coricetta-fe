@@ -144,15 +144,16 @@ function Home() {
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
           {recipes.map(recipe => (
+              <button onClick={() => getRecipe(recipe.id)}>
               <div key={recipe.id} className="border shadow-lg hover:scale-105 duration-300 rounded-lg">
                 <img src={recipe.image} alt="/" className="w-full h-[200px] object-cover rounded-t-lg" />
                 <div className="flex justify-between px-2 py-4">
                   <p className="font-bold">{recipe.recipeName}</p>
                   <p>
-                    <span className="bg-orange-500 text-white p-1 rounded-full">{recipe.userName}</span>
+                    <span  className="bg-orange-500 text-white p-1 rounded-full">{recipe.userName}</span>
                   </p>
                   </div>
-              </div>
+              </div></button>
           ))}
         </div>
         <br></br>
