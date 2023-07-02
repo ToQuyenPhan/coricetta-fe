@@ -43,7 +43,8 @@ function RecipeDetail() {
   return (
     <div className="w-full">
       <Header />
-      <Banner />
+      <br />
+      <br /><br /><br />
       {!recipe ? (
         <div
           style={{
@@ -73,67 +74,37 @@ function RecipeDetail() {
                       />
 
                       <div className="blog-item-content bg-white p-5">
-                        <span className="text-muted text-capitalize mr-3">
-                          <i className="ti-pencil-alt mr-2"></i>
-                          {recipe?.userName}
-                        </span>
-                        {/* <div className="blog-item-meta bg-gray py-1 px-2">
-                          <span className="text-black text-capitalize mr-3">
-                            <i className="ti-time mr-1"></i> {recipe.da}
-                          </span>
-                        </div> */}
-
                         <h3 className="quote">{recipe?.recipeName}</h3>
-                        <p className="lead mb-4">{recipe?.description}</p>
+                        <span className="text-muted text-capitalize mr-3 mb-4">
+                          Tác giả: {recipe?.userName}
+                        </span>
+                        <p className="lead mb-4">Mô tả: {recipe?.description}</p>
 
                         <p className="lead mb-4 font-weight-normal text-black">
-                          Prepared Time: {recipe?.prepareTime}
+                          Thời gian chuẩn bị: {recipe?.prepareTime}
                         </p>
                         <p className="lead mb-4 font-weight-normal text-black">
-                          Cook Time: {recipe?.cookTime}
+                          Thời gian nấu: {recipe?.cookTime}
                         </p>
-                        <div className="mt-4">
-                          <h3>Instructions</h3>
-                          <ol className="list-group">
-                            {recipe.steps.map((step, index) => (
-                              <li key={index} className="list-group-item">
-                                Step {step.stepNumber}: {step.description}
-                              </li>
-                            ))}
-                          </ol>
-                        </div>
                         <div>
-      <h3>Categories</h3>
+      <h3>Loại món ăn: </h3>
       <ul>
         {recipe.categories.map((category, index) => (
           <li key={index}>{category.categoryName}</li>
         ))}
       </ul>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Ingredient Name</th>
-            <th>Quantity</th>
-            <th>Measurement</th>
-            <th>Calories</th>
-          </tr>
-        </thead>
-        <tbody>
+      <h3>Các nguyên liệu:</h3>
           {recipe.ingredients.map((ingredient) => (
-            <tr key={ingredient.id}>
-              <td>{ingredient?.ingredientName}</td>
-              <td>{ingredient?.quantity}</td>
-              <td>{ingredient?.measurement}</td>
-              <td>{ingredient?.calories}</td>
-            </tr>
+            <li className="lowercase" key={ingredient.id}>
+              {ingredient?.quantity} &nbsp;
+              {ingredient?.measurement} &nbsp;
+              {ingredient?.ingredientName} &nbsp;  
+            </li>
           ))}
-        </tbody>
-      </table>
     </div>
   
                         <div className="mt-4">
-                          <h3>Instructions</h3>
+                          <h3>Các bước thực hiện:</h3>
                           <ol className="list-group">
                             {recipe.steps.map((step, index) => (
                               <li key={index} className="list-group-item">
@@ -151,7 +122,7 @@ function RecipeDetail() {
           </div>
         </section>
       )}
-      <Comment />
+      {/* <Comment/> */}
     </div>
   );
 }

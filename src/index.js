@@ -6,6 +6,7 @@ import Home from './pages/HomePage';
 import RecipDetails from './pages/RecipeDetailsPage';
 import UserList from './pages/UserManagementPage';
 import MyRecipes from './pages/PersonalPage';
+import MyProfile from './pages/ProfilePage';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import SignUp from './SignUp';
 
@@ -19,6 +20,7 @@ root.render(
       <Route exact path="/signup" element={<SignUp/>}/>
       <Route exact path="/recipeDetails" element={<RecipDetails/>}/>
       <Route exact path="/myRecipes" element={<MyRecipes/>}/>
+      <Route exact path="/profile" element={<MyProfile/>}/>
     </Routes>
   </BrowserRouter>
 );

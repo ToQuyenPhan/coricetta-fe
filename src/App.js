@@ -37,7 +37,7 @@ function App() {
     const res = await fetch(url, { mode: 'cors', method: 'POST', headers: headers, body: JSON.stringify({ "email" : email, "password": password})});
     if (res.status === 200) {
       const data = await res.text();
-      localStorage.setItem("Token", data);
+      localStorage.setItem("Token", data.jwtDecode);
       localStorage.setItem("Role", jwtDecode(data).Role);
       Swal.fire({
         position: 'center',
