@@ -19,7 +19,8 @@ function App() {
     if(localStorage){
       var role = localStorage.getItem('Role');
       if(role === 'USER'){
-        //navigate
+        localStorage.removeItem("Token");
+        localStorage.removeItem("Role")
       }
     }
 }, [message])
