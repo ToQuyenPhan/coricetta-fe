@@ -96,13 +96,13 @@ function Home() {
                           <p className="px-2">Độ khó: {recipe.level}</p>
                           <span className="px-2 ">Loại:</span>
                           {recipe.categories.map(category => (
-                              <span key={category.id}>{category.categoryName}</span>
+                              <span key={category.id} className="px-2">{category.categoryName}</span>
                           ))}
                           <br></br>
                           <button onClick={() => getRecipe(recipe.id)} className="border border-white rounded-xl px-5 py-1 bg-white text-black mx-2 absolute bottom-4">
                             Xem chi tiết!</button>
                       </div>
-                      <img className="max-h-[160px] md:max-h-[250px] w-full object-cover rounded-xl" src={recipe.image} alt="/" />
+                      <img className="max-h-[160px] md:max-h-[200px] w-full object-cover rounded-xl" src={recipe.image} alt="/" />
                   </div>
               ))}
             </div>

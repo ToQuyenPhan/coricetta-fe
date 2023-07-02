@@ -10,7 +10,7 @@ import MyProfile from './pages/ProfilePage';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import SignUp from './SignUp';
 import RecipeDetails from './pages/RecipeDetailsPage';
-import CreateMenu from './pages/CreateMenuPage';
+import Menu from './pages/MenuPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -23,6 +23,7 @@ root.render(
       <Route exact path="/recipeDetails" element={<RecipeDetails/>}/>
       <Route exact path="/myRecipes" element={<MyRecipes/>}/>
       <Route exact path="/profile" element={<MyProfile/>}/>
+      <Route exact path="/menu" element={<Menu/>}/>
     </Routes>
   </BrowserRouter>
 );

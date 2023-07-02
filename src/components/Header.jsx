@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 function Header() {
 
     return (
-        <div className="max-w-[1640px] mx-auto flex justify-between items-center p-4">
+        <div className="max-w-[1640px] mx-auto flex justify-between items-center p-4 shadow-md">
             {/* Left side */}
             <div className="flex items-center">
                 <div className="cursor-pointer hidden">
@@ -27,9 +27,9 @@ function Header() {
             {/* Nav menu */}
             <div className="flex items-center justify-between p-6">
                 <Popover.Group className="hidden lg:flex lg:gap-x-12">
-                    <a href="#" className="text-sm font-semibold leading-6 text-gray-900 no-underline">
+                    <Link to="/home" className="text-sm font-semibold leading-6 text-gray-900 no-underline">
                         Home
-                    </a>
+                    </Link>
                     <Popover className="relative">
                         <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
                             User
@@ -50,10 +50,11 @@ function Header() {
                                     <MdOutlineRestaurantMenu size={20} />
                                     My Recipes
                                 </div>
-                                <div className="px-3 py-2 border-b flex gap-2 justify-center items-center">
+                                <Link to="/menu" className="px-3 py-2 border-b flex gap-2 justify-center items-center no-underline
+                                     text-black">
                                     <MdOutlineMenuBook size={20}/>
                                     My Menus
-                                </div>
+                                </Link>
                                 <Link to="/" className="px-3 py-2 text-center border-b flex gap-3 justify-center items-center 
                                     no-underline text-black">
                                     <AiOutlineLogout size={20}/>
