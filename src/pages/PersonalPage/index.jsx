@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Header from "./components/Header";
-import Banner from "./components/Banner";
 
 function MyRecipe() {
   const [recipes, setRecipe] = useState(null);
@@ -48,8 +46,6 @@ function MyRecipe() {
 
   return (
     <div>
-        <Header />
-      {/*<Banner />  */}
       <div>
         {recipes?.length > 0 && (
           <div className="max-w-[1640px] mx-auto p-4 py-12 grid md:grid-cols-3 gap-6">

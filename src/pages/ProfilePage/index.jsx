@@ -9,54 +9,65 @@ import MyRecipe from "../PersonalPage";
 
 function UserProfile()  {
     const [profile, setProfile] = useState(null);
+    const [tokenUser, setTokenUser] = useState(null);
   const token = localStorage.getItem("Token");
   const location = useLocation();
   const user = location.state?.user;
   const navigate = useNavigate();
 
+  const getUserId=()=> {
+    if (token) {
+        // Decode the token to get user information
+        const decodedToken = jwt_decode(token);
+        setTokenUser(decodedToken);
+        console.log("tokenUser", JSON.stringify(decodedToken));
+      }
+  }
 
   const fetchProfileData = async () => {
-//     const res = await fetch(
-//       `https://localhost:44327/api/Users/byId?userId=1`,
-//       {
-//         mode: "cors",
-//         method: "GET",
-//         headers: new Headers({
-//           Authorization: `Bearer ${token}`,
-//           "Content-Type": "application/json",
-//           Accept: "application/json",
-//         }),
-//       }
-//     );
-//     if (res.status === 200) {
-//       const data = await res.json();
-//       setProfile(data.item);
-//       console.log("data", JSON.stringify(data));
-//     }
-if (token) {
-  // Decode the token to get user information
-  const decodedToken = jwt_decode(token);
-  setProfile(decodedToken);
-}
+    const res = await fetch(
+      `https://localhost:44327/api/Users/byId?userId=${tokenUser.Id}`,
+      {
+        mode: "cors",
+        method: "GET",
+        headers: new Headers({
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),         
+      }
+    );
+    if (res.status === 200) {
+      const data = await res.json();
+      setProfile(data);
+      console.log("data", JSON.stringify(data));
+    }
+
   };
-console.log("data", JSON.stringify(user));
+
   useEffect(() => {
     if (localStorage) {
       var role = localStorage.getItem("Role");
       if (role !== "USER") {
         navigate("/");
       } else {
-        fetchProfileData();
+        getUserId();
+        // fetchProfileData();
       }
     }
   }, []);
+
+  useEffect(()=>{
+    if(tokenUser !== null){
+      fetchProfileData();
+    }
+  },[tokenUser])
   return (
     <div>
-      Hello
         {/* <Header/> */}
-                {!profile && (
+                {profile !== null ? (
     <section style={{ backgroundColor: '#eee' }}>
-      <div className="container py-5">
+            <div className="container py-5">
         {/* <div className="row">
           <div className="col">
             <nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
@@ -73,8 +84,11 @@ console.log("data", JSON.stringify(user));
           <div className="col-lg-4">
             <div className="card mb-4">
               <div className="card-body text-center">
+                <div  style={{ display: 'flex', justifyContent: 'center'}}>
+
                 <img src="https://www.shareicon.net/data/128x128/2016/09/01/822751_user_512x512.png" alt="avatar" className="rounded-circle img-fluid" style={{ width: '100px' }} />
-                <h5 className="my-3">{user?.userName}</h5>
+                </div>
+                <h5 className="my-3">{profile?.userName}</h5>
                 {/* <p className="text-muted mb-1">{profile?.phoneNumber}</p>
                 <p className="text-muted mb-4">{profile?.email}</p> */}
                 {/* <div className="d-flex justify-content-center mb-2">
@@ -110,7 +124,7 @@ console.log("data", JSON.stringify(user));
               </div>
             </div> */}
           </div>
-          {/* <div className="col-lg-8">
+          <div className="col-lg-8">
             <div className="card mb-4">
               <div className="card-body">
                 <div className="row">
@@ -118,7 +132,7 @@ console.log("data", JSON.stringify(user));
                     <p className="mb-0">Full Name</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">{user?.userName}</p>
+                    <p className="text-muted mb-0">{profile?.userName}</p>
                   </div>
                 </div>
                 <hr />
@@ -127,7 +141,7 @@ console.log("data", JSON.stringify(user));
                     <p className="mb-0">Email</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">{user?.email}</p>
+                    <p className="text-muted mb-0">{profile?.email}</p>
                   </div>
                 </div>
                 <hr />
@@ -136,7 +150,7 @@ console.log("data", JSON.stringify(user));
                     <p className="mb-0">Phone</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">{user?.phoneNumber}</p>
+                    <p className="text-muted mb-0">{profile?.phoneNumber}</p>
                   </div>
                 </div>
                 <hr />
@@ -145,12 +159,12 @@ console.log("data", JSON.stringify(user));
                     <p className="mb-0">Role</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">{user?.role}</p>
+                    <p className="text-muted mb-0">{profile?.role}</p>
                   </div>
                 </div>
                               </div>
             </div>
-            <div className="row">
+            {/* <div className="row">
               <div className="col-md-6">
                 <div className="card mb-4 mb-md-0">
                   <div className="card-body">
@@ -205,12 +219,12 @@ console.log("data", JSON.stringify(user));
                   </div>
                 </div>
               </div>
-            </div>
-          </div> */}
+            </div> */}
+          </div>
         </div>
       </div>
 </section>
-)}
+) : null}
 <MyRecipe/>
 </div>
   )}
