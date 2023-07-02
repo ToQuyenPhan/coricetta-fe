@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Header from "./components/Header";
+import Header from "../../components/Header";
 import Banner from "./components/Banner";
 import Comment from "./components/comment";
 import "./index.css";
