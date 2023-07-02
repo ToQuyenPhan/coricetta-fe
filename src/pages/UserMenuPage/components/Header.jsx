@@ -18,27 +18,24 @@ function Header() {
             {/* Search */}
             <div className="bg-gray-200 rounded-full flex items-center px-2 w-[200px] sm:w-[400px] lg:w-[500px]">
                 <AiOutlineSearch size={25} />
-                <input className="bg-transparent p-2 focus:outline-none w-full" type="text" placeholder="Tìm kiếm công thức" />
+                <input className="bg-transparent p-2 focus:outline-none w-full" type="text" placeholder="Tìm kiếm thực đơn" />
             </div>
 
             {/* Nav menu */}
             <div className="flex items-center justify-between p-6">
                 <Popover.Group className="hidden lg:flex lg:gap-x-12">
-                    <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+                    <Link to="/Home" className="text-sm font-semibold leading-6 text-gray-900">
                         Home
-                    </a>
+                    </Link>
                     <Link to="/Menu" className="text-sm font-semibold leading-6 text-gray-900">
                         Menus
                     </Link>
-                    <Link to="/UserMenu" className="text-sm font-semibold leading-6 text-gray-900">
-                        User Menus
-                    </Link>
-                    <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+                    <Link to="#" className="text-sm font-semibold leading-6 text-gray-900">
                         My Recipes
-                    </a>
-                    <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-                        User
-                    </a>
+                    </Link>
+                    <Link to="#" className="text-sm font-semibold leading-6 text-gray-900">
+                        Users
+                    </Link>
                 </Popover.Group>
             </div>
         </div>
