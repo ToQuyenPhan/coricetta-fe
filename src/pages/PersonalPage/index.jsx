@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Header from "../../components/Header";
 
 function MyRecipe() {
   const [recipes, setRecipe] = useState(null);
@@ -46,7 +47,12 @@ function MyRecipe() {
 
   return (
     <div>
-      <div>
+      <Header />
+      <div className="mt-5">
+        <div>
+          <h1 className="text-orange-600 font-bold text-4xl mb-3 inline-block">Danh sách các thực đơn của bạn:</h1>
+          <h2 className="inline-block float-right font-bold mr-3">Tổng cộng {recipes.length} công thức</h2>
+        </div>
         {recipes?.length > 0 && (
           <div className="max-w-[1640px] mx-auto p-4 py-12 grid md:grid-cols-3 gap-6">
             {recipes.map((recipe) => (

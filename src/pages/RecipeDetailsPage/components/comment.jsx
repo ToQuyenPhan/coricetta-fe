@@ -48,7 +48,23 @@ function Comment() {
   return (
     <div>
       <div className="container">
-        <h3>Comment</h3>
+        <div className="col-lg-12">
+          <form
+            className=" bg-white rounded p-5"
+            id="comment-form"
+            onSubmit={handleSubmit}
+          >
+            <h3 className="mb-4">Viết bình luận:</h3>
+            <div className="mb-4">
+              <input className='border border-gray-300 p-3 w-3/4 rounded font-sans text-base text-black focus:outline-0'
+                type="text" placeholder="Hãy để lại bình luận của bạn!" />
+
+              <button className=' bg-gray-700 p-3 w-1/6 rounded font-sans text-base text-white hover:bg-gray-500 ml-3' 
+                type='submit'>Bình luận</button>
+            </div>
+          </form>
+        </div>
+        <h3>Một số bình luận: </h3>
         {comment?.items.map((item, index) => (
           <div className="row" key={index}>
             <div className="col-8">
@@ -68,32 +84,7 @@ function Comment() {
             </div>
           </div>
         ))}
-        <div className="col-lg-12">
-          <form
-            className="contact-form bg-white rounded p-5"
-            id="comment-form"
-            onSubmit={handleSubmit}
-          >
-            <h3 className="mb-4">Write a comment</h3>
 
-            <textarea
-              className="form-control mb-3"
-              name="comment"
-              id="comment"
-              cols="30"
-              rows="5"
-              placeholder="Comment"
-            ></textarea>
-
-            <input
-              className="btn btn-main btn-round-full"
-              type="submit"
-              name="submit-contact"
-              id="submit_contact"
-              value="Submit Comment"
-            />
-          </form>
-        </div>
       </div>
     </div>
   );

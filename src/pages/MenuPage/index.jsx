@@ -96,7 +96,7 @@ function Menu() {
             <div className="max-w-[1640px] m-auto px-4 py-5">
                 <div>
                     <h1 className="text-orange-600 font-bold text-4xl mb-3 inline-block">Danh sách các thực đơn của bạn:</h1>
-                    <h2 className="inline-block float-right font-bold">{menus.length} Menus</h2>
+                    <h2 className="inline-block float-right font-bold">Tổng cộng {menus.length} menus</h2>
                 </div>
                 <Fragment className="grid place-items-center">
                    <Tooltip position="right" content="Tạo menu mới!">

@@ -21,9 +21,9 @@ root.render(
       <Route exact path="/users" element={<UserList/>}/>
       <Route exact path="/signup" element={<SignUp/>}/>
       <Route exact path="/recipeDetails" element={<RecipeDetails/>}/>
-      <Route exact path="/myRecipes" element={<MyRecipes/>}/>
+      <Route exact path="/my-recipes" element={<MyRecipes/>}/>
       <Route exact path="/profile" element={<MyProfile/>}/>
-      <Route exact path="/menu" element={<Menu/>}/>
+      <Route exact path="/my-menus" element={<Menu/>}/>
     </Routes>
   </BrowserRouter>
 );

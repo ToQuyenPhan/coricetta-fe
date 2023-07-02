@@ -1,8 +1,9 @@
-import React, {Fragment} from "react";
+import React, { Fragment } from "react";
 import { AiOutlineMenu, AiOutlineSearch, AiOutlineLogout } from 'react-icons/ai'
 import { MdOutlineMenuBook, MdOutlineRestaurantMenu } from 'react-icons/md'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Popover, Transition } from '@headlessui/react'
+import { BsPersonBoundingBox } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 
 
@@ -46,18 +47,22 @@ function Header() {
                         >
                             <Popover.Panel className="absolute right-0 top-full z-10 mt-3 w-screen max-w-[300px] overflow-hidden rounded-xl
                                  bg-white shadow-lg ring-1 ring-gray-900/5">
-                                <div className="px-3 py-2 text-center border-b flex gap-2 justify-center items-center">
+                                <Link to="/profile" className="px-3 py-2 text-center border-b flex gap-3 justify-center items-center">
+                                    <BsPersonBoundingBox size={20} />
+                                    Profile
+                                </Link>
+                                <Link to="/my-recipes" className="px-3 py-2 text-center border-b flex gap-2 justify-center items-center">
                                     <MdOutlineRestaurantMenu size={20} />
                                     My Recipes
-                                </div>
-                                <Link to="/menu" className="px-3 py-2 border-b flex gap-2 justify-center items-center no-underline
+                                </Link>
+                                <Link to="/my-menus" className="px-3 py-2 border-b flex gap-2 justify-center items-center no-underline
                                      text-black">
-                                    <MdOutlineMenuBook size={20}/>
+                                    <MdOutlineMenuBook size={20} />
                                     My Menus
                                 </Link>
                                 <Link to="/" className="px-3 py-2 text-center border-b flex gap-3 justify-center items-center 
                                     no-underline text-black">
-                                    <AiOutlineLogout size={20}/>
+                                    <AiOutlineLogout size={20} />
                                     Log out
                                 </Link>
                             </Popover.Panel>
