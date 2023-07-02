@@ -96,7 +96,7 @@ function Home() {
                           <p className="px-2">Độ khó: {recipe.level}</p>
                           <span className="px-2">Loại:</span>
                           {recipe.categories.map(category => (
-                              <span key={category.id} className="px-2">{category.categoryName}</span>
+                              <span key={category.id}>{category.categoryName}</span>
                           ))}
                           <br></br>
                           <button onClick={() => getRecipe(recipe.id)} className="border border-white rounded-xl px-5 py-1 bg-white text-black mx-2 absolute bottom-4">
@@ -116,11 +116,11 @@ function Home() {
               <div>
                 <p className="font-bold text-gray-700">Các loại món ăn</p>
                 <div className="flex justify-between flex-wrap">
-                    <button className="border border-orange-600 text-orange-600 rounded-xl px-5 py-1 hover:bg-orange-600
+                    <button className="border border-orange-600 text-orange-600 rounded-xl px-3 py-1 hover:bg-orange-600
                      hover:text-white m-1" onClick={() => fetchRecipeData('all', 0)}>Tất cả</button>
                     {categories.length > 0 && (
                         categories.map(category => (
-                          <button key={category.id} className="border rounded-xl px-5 py-1 border-orange-600 text-orange-600
+                          <button key={category.id} className="border rounded-xl px-3 py-1 border-orange-600 text-orange-600
                           hover:bg-orange-600 hover:text-white m-1" onClick={() => fetchRecipeData('all', category.id)}>
                             {category.categoryName}</button>
                         )))}
@@ -130,13 +130,13 @@ function Home() {
               <div>
                 <p className="font-bold text-gray-700">Độ khó:</p>
                 <div className="flex justify-between max-w-[390px] w-full">
-                  <button className="border rounded-xl px-5 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
+                  <button className="border rounded-xl px-3 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
                     hover:text-white m-1" onClick={() => fetchRecipeData('all', 0)}>Tất cả</button>
-                  <button className="border rounded-xl px-5 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
+                  <button className="border rounded-xl px-3 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
                     hover:text-white m-1" onClick={() => fetchRecipeData('easy', 0)}>Dễ</button>
-                  <button className="border rounded-xl px-5 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
+                  <button className="border rounded-xl px-3 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
                     hover:text-white m-1" onClick={() => fetchRecipeData('normal', 0)}>Trung bình</button>
-                  <button className="border rounded-xl px-5 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
+                  <button className="border rounded-xl px-3 py-1 border-orange-600 text-orange-600 hover:bg-orange-600 
                     hover:text-white m-1" onClick={() => fetchRecipeData('hard', 0)}>Khó</button>
                 </div>
               </div>            
