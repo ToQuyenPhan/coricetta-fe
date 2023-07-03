@@ -2,9 +2,11 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../index.css";
+import Swal from 'sweetalert2';
 
 function Comment() {
-  const [comment, setComment] = useState(null);
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState(null);
   const token = localStorage.getItem("Token");
   const location = useLocation();
   const recipeId = location.state?.recipeId;
@@ -25,7 +27,7 @@ function Comment() {
       .request(config)
       .then((response) => {
         console.log("comment", JSON.stringify(response.data));
-        setComment(response?.data);
+        setComments(response?.data);
       })
       .catch((error) => {
         console.log(error);
@@ -36,13 +38,30 @@ function Comment() {
     fetchCommentData();
   }, []);
 
-  const handleSubmit = (event) => {
+  const handleCommentChange = event => {
+    setComment(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const commentContent = event.target.comment.value;
-
-    // Gửi bình luận đến API
-
-    // Sau khi gửi thành công, có thể cần làm mới danh sách bình luận bằng cách gọi fetchCommentData() lại.
+    const res = await fetch("https://localhost:44327/api/Actions/create",
+      {
+        mode: 'cors', method: 'POST', headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({ "recipeId": recipeId, "type": 1, "content": comment })
+      });
+    if (res.status === 200) {
+      fetchCommentData();
+    } else {
+      const data = await res.text();
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: data
+      })
+    }
   };
 
   return (
@@ -57,15 +76,16 @@ function Comment() {
             <h3 className="mb-4">Viết bình luận:</h3>
             <div className="mb-4">
               <input className='border border-gray-300 p-3 w-3/4 rounded font-sans text-base text-black focus:outline-0'
-                type="text" placeholder="Hãy để lại bình luận của bạn!" />
+                type="text" placeholder="Hãy để lại bình luận của bạn!" required onChange={handleCommentChange} value={comment}
+                minLength={1} maxLength={50} />
 
-              <button className=' bg-gray-700 p-3 w-1/6 rounded font-sans text-base text-white hover:bg-gray-500 ml-3' 
+              <button className=' bg-gray-700 p-3 w-1/6 rounded font-sans text-base text-white hover:bg-gray-500 ml-3'
                 type='submit'>Bình luận</button>
             </div>
           </form>
         </div>
         <h3>Một số bình luận: </h3>
-        {comment?.items.map((item, index) => (
+        {comments?.items.map((item, index) => (
           <div className="row" key={index}>
             <div className="col-8">
               <div className="card card-white post">
