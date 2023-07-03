@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { BiSolidFlag } from 'react-icons/bi';
 import axios from "axios";
 import Header from "../../components/Header";
@@ -19,7 +19,7 @@ function RecipeDetail() {
   const [description, setDescription] = useState('');
   const token = localStorage.getItem("Token");
   const userId = localStorage.getItem("Id");
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const recipeId = location.state?.recipeId;
 
@@ -44,6 +44,36 @@ function RecipeDetail() {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const fetchReportRecipeData = async (e) => {
+    setOpen(!open);
+    e.preventDefault();
+    const res = await fetch("https://localhost:44327/api/Reports/create",
+      {
+        mode: 'cors', method: 'POST', headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({ "recipeId": recipeId, "description": description })
+      });
+    if (res.status === 200) {
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Báo cáo thành công!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate("/home");
+    } else {
+      const data = await res.text();
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: data
+      })
+    }
   };
 
   const handleOpen = () => setOpen(!open);
@@ -94,7 +124,7 @@ function RecipeDetail() {
 
                               <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Báo cáo công thức</h2></DialogHeader>
                               <DialogBody divider>
-                                <form id="report">
+                                <form id="report" onSubmit={fetchReportRecipeData}>
                                   <div className="mb-4">
                                     <h5 className="text-left ml-3 font-bold">Mô tả:</h5>
                                     <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
