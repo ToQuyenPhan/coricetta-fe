@@ -135,7 +135,7 @@ function Menu() {
                                 </div>
                             </form>
                         </DialogBody>
-                        <DialogFooter>
+                        <DialogFooter className="flex justify-end">
                             <Button 
                                 variant="text"
                                 color="red"
