@@ -69,7 +69,8 @@ function Search() {
           <div className="cursor-pointer hidden">
             <AiOutlineMenu size={30} />
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl px-2">Co<span className="font-bold">Ricetta</span></h1>
+          <Link to="/home"><h1 className="text-2xl sm:text-3xl lg:text-4xl px-2">Co<span className="font-bold">Ricetta</span>
+                    </h1></Link>  
         </div>
 
         {/* Search */}
