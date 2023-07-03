@@ -9,7 +9,7 @@ function Home() {
     const [categories, setCategories] = useState([]);
     const token = localStorage.getItem('Token');
     const navigate = useNavigate();
-    let url = "https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=8";
+    let url = "https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=8&recipeStatus=1";
 
     const fetchRecipeData = async (level,category) => {      
         switch(level){
@@ -40,7 +40,7 @@ function Home() {
     }
 
     const fetchHeroData = async () => {     
-      const res = await fetch("https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=3", { mode: 'cors', method: 'GET', headers: new Headers({
+      const res = await fetch("https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=3&recipeStatus=1", { mode: 'cors', method: 'GET', headers: new Headers({
           'Authorization': `Bearer ${token}`, 
           'Content-Type': 'application/json',
           'Accept': 'application/json'

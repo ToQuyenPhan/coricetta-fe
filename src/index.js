@@ -11,6 +11,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import SignUp from './SignUp';
 import RecipeDetails from './pages/RecipeDetailsPage';
 import Menu from './pages/MenuPage';
+import SearchPage from './pages/SearchPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -24,6 +25,7 @@ root.render(
       <Route exact path="/my-recipes" element={<MyRecipes/>}/>
       <Route exact path="/profile" element={<MyProfile/>}/>
       <Route exact path="/my-menus" element={<Menu/>}/>
+      <Route exact path="/search" element={<SearchPage/>}/>
     </Routes>
   </BrowserRouter>
 );

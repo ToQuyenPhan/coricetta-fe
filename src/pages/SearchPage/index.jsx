@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 
-function MyRecipe() {
-  const [recipes, setRecipe] = useState([]);
+function Search() {
+  const [recipes, setRecipes] = useState([]);
   const token = localStorage.getItem("Token");
   const location = useLocation();
   const recipeId = location.state?.recipeId;
@@ -12,7 +12,7 @@ function MyRecipe() {
 
   const fetchRecipeData = async () => {
     const res = await fetch(
-      `https://localhost:44327/api/Recipes/all?userId=1&currentPage=1&pageSize=10`,
+      `https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=10`,
       {
         mode: "cors",
         method: "GET",
@@ -25,7 +25,7 @@ function MyRecipe() {
     );
     if (res.status === 200) {
       const data = await res.json();
-      setRecipe(data.items);
+      setRecipes(data.items);
       console.log("data", JSON.stringify(data));
     }
   };
@@ -50,7 +50,7 @@ function MyRecipe() {
       <Header />
       <div className="mt-5">
         <div>
-          <h1 className="text-orange-600 font-bold text-4xl mb-3 inline-block">Danh sách các thực đơn của bạn:</h1>
+          <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các công thức:</h1>
           <h2 className="inline-block float-right font-bold mr-3">Tổng cộng {recipes.length} công thức</h2>
         </div>
         {recipes?.length > 0 && (
@@ -92,4 +92,4 @@ function MyRecipe() {
   );
 }
 
-export default MyRecipe;
+export default Search;
