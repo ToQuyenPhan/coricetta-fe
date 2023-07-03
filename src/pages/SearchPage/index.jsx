@@ -6,9 +6,11 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Popover, Transition } from '@headlessui/react'
 import { BsPersonBoundingBox } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import EmptyBox from '../../assets/empty.png';
 
 function Search() {
   const [recipes, setRecipes] = useState([]);
+  const [menus, setMenus] = useState([]);
   const [search, setSearch] = useState('');
   const token = localStorage.getItem("Token");
   const location = useLocation();
@@ -35,8 +37,29 @@ function Search() {
     }
   };
 
+  const fetchMenuData = async (value) => {
+    const res = await fetch(
+      `https://localhost:44327/api/Menus/all?currentPage=1&pageSize=8&menuName=${value}&menuStatus=1`,
+      {
+        mode: "cors",
+        method: "GET",
+        headers: new Headers({
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),
+      }
+    );
+    if (res.status === 200) {
+      const data = await res.json();
+      setMenus(data.items);
+      console.log("data", JSON.stringify(data));
+    }
+  };
+
   const handleSearch = () => {
     fetchRecipeData(search);
+    fetchMenuData(search);
   }
 
   const handleSearchChange = event => {
@@ -55,6 +78,7 @@ function Search() {
       } else {
         if (searchFromHome !== '') {
           fetchRecipeData(searchFromHome);
+          fetchMenuData(searchFromHome)
           setSearch(searchFromHome);
         }
       }
@@ -70,13 +94,13 @@ function Search() {
             <AiOutlineMenu size={30} />
           </div>
           <Link to="/home"><h1 className="text-2xl sm:text-3xl lg:text-4xl px-2">Co<span className="font-bold">Ricetta</span>
-                    </h1></Link>  
+          </h1></Link>
         </div>
 
         {/* Search */}
         <div className="bg-gray-200 rounded-full flex items-center px-2 w-[200px] sm:w-[400px] lg:w-[500px]">
           <AiOutlineSearch size={25} onClick={handleSearch} className="hover:cursor-pointer" />
-          <input className="bg-transparent p-2 focus:outline-none w-full" type="text" placeholder="Tìm kiếm công thức" required
+          <input className="bg-transparent p-2 focus:outline-none w-full" type="text" placeholder="Tìm kiếm công thức & menu" required
             onChange={handleSearchChange} value={search} minLength={1} maxLength={50} />
         </div>
 
@@ -125,13 +149,12 @@ function Search() {
             </Popover>
           </Popover.Group>
         </div>
-      </div>
-      <div className="mt-5">
-        <div>
-          <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các công thức cho "{search}"</h1>
-          <h2 className="inline-block float-right font-bold mr-3">Tổng cộng {recipes.length} công thức</h2>
-        </div>
-        {recipes?.length > 0 && (
+      </div>{recipes?.length > 0 ? (
+        <div className="mt-5">
+          <div>
+            <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các công thức cho "{search}"</h1>
+            <h2 className="inline-block float-right font-bold mr-3">Tổng cộng {recipes.length} công thức</h2>
+          </div>
           <div className="max-w-[1640px] mx-auto p-4 py-12 grid md:grid-cols-3 gap-6">
             {recipes.map((recipe) => (
               <div key={recipe?.id} className="rounded-xl relative">
@@ -164,8 +187,62 @@ function Search() {
               </div>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="my-5">
+          <div>
+            <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các công thức cho "{search}"</h1>
+            <h2 className="inline-block float-right font-bold mr-3">Tổng cộng 0 công thức</h2>
+          </div>
+          <br />
+          <br />
+          <br />
+          <div className="flex justify-center items-center">
+            <img src={EmptyBox} alt="..." width={300} height={300} />
+          </div>
+          <br />
+          <br />
+          <br />
+        </div>
+      )}
+      {menus?.length > 0 ? (
+        <div className="mt-5">
+          <div>
+            <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các menu cho "{search}"</h1>
+            <h2 className="inline-block float-right font-bold mr-3">Tổng cộng {menus.length} menu</h2>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {menus.map(menu => (
+              <div key={menu.id} className="border shadow-lg hover:scale-105 duration-300 rounded-lg relative">
+                <img src="https://as1.ftcdn.net/v2/jpg/03/14/55/62/1000_F_314556236_hRwCkoZIayHyTW4IBjIizEaX8vc7XwV5.jpg" alt="/" className="w-full h-[200px] object-cover rounded-t-lg" />
+                <div className="flex justify-between px-2 py-4">
+                  <p className="font-bold">{menu.menuName}</p>
+                  <p>
+                    <span className="bg-orange-500 text-white p-1 rounded-full"></span>
+                  </p>
+                </div>
+                <span className=" bg-blue-600 text-white p-1 rounded-full px-3 py-1 absolute top-2 right-2">{menu.status}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="my-5">
+          <div>
+            <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các menu cho "{search}"</h1>
+            <h2 className="inline-block float-right font-bold mr-3">Tổng cộng 0 menu</h2>
+          </div>
+          <br />
+          <br />
+          <br />
+          <div className="flex justify-center items-center">
+            <img src={EmptyBox} alt="..." width={300} height={300} />
+          </div>
+          <br />
+          <br />
+          <br />
+        </div>
+      )}
     </div>
   );
 }

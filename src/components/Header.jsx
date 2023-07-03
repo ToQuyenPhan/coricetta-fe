@@ -34,7 +34,7 @@ function Header() {
             {/* Search */}
             <div className="bg-gray-200 rounded-full flex items-center px-2 w-[200px] sm:w-[400px] lg:w-[500px]">
                 <AiOutlineSearch size={25} onClick={handleSearch} className="hover:cursor-pointer"/>
-                <input className="bg-transparent p-2 focus:outline-none w-full" type="text" placeholder="Tìm kiếm công thức" required
+                <input className="bg-transparent p-2 focus:outline-none w-full" type="text" placeholder="Tìm kiếm công thức & menu" required
                     onChange={handleSearchChange} value={search} minLength={1} maxLength={50} />
             </div>
 
