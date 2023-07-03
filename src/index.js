@@ -12,6 +12,7 @@ import SignUp from './SignUp';
 import RecipeDetails from './pages/RecipeDetailsPage';
 import Menu from './pages/MenuPage';
 import SearchPage from './pages/SearchPage';
+import MenuDetails from './pages/MenuDetailsPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -26,6 +27,7 @@ root.render(
       <Route exact path="/profile" element={<MyProfile/>}/>
       <Route exact path="/my-menus" element={<Menu/>}/>
       <Route exact path="/search" element={<SearchPage/>}/>
+      <Route exact path="/menu-details" element={<MenuDetails/>}/>
     </Routes>
   </BrowserRouter>
 );

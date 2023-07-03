@@ -50,6 +50,10 @@ function Menu() {
         setMode(e.target.value);
     }
 
+    const getRecipe = (id) => {
+        navigate('/menu-details', {state: {menuId: id}});
+      }
+
     const fetchCreateMenuData = async (e) => {
         setOpen(!open);
         if (mode === "public") modeStatus = 1;
@@ -149,6 +153,7 @@ function Menu() {
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 {menus.map(menu => (
+                    <button onClick={() => getRecipe(menu.id)}>
                     <div key={menu.id} className="border shadow-lg hover:scale-105 duration-300 rounded-lg relative">
                         <img src="https://as1.ftcdn.net/v2/jpg/03/14/55/62/1000_F_314556236_hRwCkoZIayHyTW4IBjIizEaX8vc7XwV5.jpg" alt="/" className="w-full h-[200px] object-cover rounded-t-lg" />
                         <div className="flex justify-between px-2 py-4">
@@ -158,7 +163,7 @@ function Menu() {
                             </p>
                         </div>
                         <span className=" bg-blue-600 text-white p-1 rounded-full px-3 py-1 absolute top-2 right-2">{menu.status}</span>
-                    </div>
+                    </div></button>
                 ))}
             </div>
             <br></br>
