@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 //import 'bootstrap/dist/css/bootstrap.min.css';
-// import Header from "./components/Header";
+import Header from "../../components/Header";
 //import 'bootstrap/dist/js/bootstrap.min.js';
 import jwt_decode from 'jwt-decode';
-import MyRecipe from "../PersonalPage";
+
 
 
 function UserProfile()  {
@@ -64,7 +64,7 @@ function UserProfile()  {
   },[tokenUser])
   return (
     <div>
-        {/* <Header/> */}
+        <Header/>
                 {profile !== null ? (
     <section style={{ backgroundColor: '#eee' }}>
             <div className="container py-5">
@@ -225,7 +225,6 @@ function UserProfile()  {
       </div>
 </section>
 ) : null}
-<MyRecipe/>
 </div>
   )}
   export default UserProfile;
