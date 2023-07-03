@@ -13,6 +13,7 @@ import RecipeDetails from './pages/RecipeDetailsPage';
 import Menu from './pages/MenuPage';
 import SearchPage from './pages/SearchPage';
 import MenuDetails from './pages/MenuDetailsPage';
+import Reports from './pages/ReportManagementPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -28,6 +29,7 @@ root.render(
       <Route exact path="/my-menus" element={<Menu/>}/>
       <Route exact path="/search" element={<SearchPage/>}/>
       <Route exact path="/menu-details" element={<MenuDetails/>}/>
+      <Route exact path="/reports" element={<Reports/>}/>
     </Routes>
   </BrowserRouter>
 );

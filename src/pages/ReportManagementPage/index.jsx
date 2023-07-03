@@ -16,33 +16,34 @@ import {
 } from '@mui/material';
 import AdminHeader from '../../components/AdminHeader';
 
-const UserList = () => {
-    const [users, setUsers] = useState([])
+function Reports(){
+    const [reports, setReports] = useState([])
     const [filter, setFilter] = useState('');
     const [page, setPage] = useState(1);
     const perPage = 10;
     const token = localStorage.getItem('Token');
     const navigate = useNavigate();
-    // const { data, total, isLoading } = useGetList('books', {
-    //     filter: { q: filter },
-    //     pagination: { page, perPage },
-    //     sort: { field: 'id', order: 'ASC' }
-    // });
 
-    const fetchUserData = async () => {
-        const res = await fetch("https://localhost:44327/api/Users/all?currentPage=1&pageSize=8", { mode: 'cors', method: 'GET', headers: new Headers({
+    const fetchReportData = async () => {
+        const res = await fetch("https://localhost:44327/api/Reports/all?currentPage=1&pageSize=8", { mode: 'cors', method: 'GET', headers: new Headers({
             'Authorization': `Bearer ${token}`, 
             'Content-Type': 'application/json'
         })});
         if(res.status === 200){
             const data = await res.json();
-            setUsers(data.items);
+            setReports(data.items);
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Someting wrong!'
+              })
         }
     }
 
     useEffect(() => {
         if(localStorage.getItem('Role') && localStorage.getItem('Token')){
-            fetchUserData();
+            fetchReportData();
         }else{
             Swal.fire({
                 icon: 'error',
@@ -53,12 +54,9 @@ const UserList = () => {
         }      
     })
 
-    // if (isLoading) {
-    //     return <div>Loading...</div>;
-    // }
-    return (
+    return(
         <div>
-            <AdminHeader />
+             <AdminHeader />
             <br />
             <Title title="Book list" />
             <TextField
@@ -73,19 +71,19 @@ const UserList = () => {
                 <Table sx={{ padding: 2 }} size="small">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Fullname</TableCell>
-                            <TableCell>Password</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Phone Number</TableCell>
+                            <TableCell>Người báo cáo</TableCell>
+                            <TableCell>Công thức</TableCell>
+                            <TableCell>Mô tả</TableCell>
+                            <TableCell>Trạng thái</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.map(user => (
-                            <TableRow key={user.id}>
-                                <TableCell>{user.userName}</TableCell>
-                                <TableCell>{user.password}</TableCell>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>{user.phoneNumber}</TableCell>
+                        {reports.map((report,index) => (
+                            <TableRow key={index}>
+                                <TableCell>{report.userName}</TableCell>
+                                <TableCell>{report.recipeName}</TableCell>
+                                <TableCell>{report.description}</TableCell>
+                                <TableCell>{report.status}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -97,6 +95,6 @@ const UserList = () => {
             </Toolbar>
         </div>
     );
-};
+}
 
-export default UserList;
+export default Reports;
