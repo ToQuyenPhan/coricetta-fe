@@ -84,7 +84,7 @@ function Comment() {
             </div>
           </form>
         </div>
-        <h3>Một số bình luận: </h3>
+        <h3 className="pl-5">Một số bình luận: </h3>
         {comments?.items.map((item, index) => (
           <div className="row" key={index}>
             <div className="col-8">

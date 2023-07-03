@@ -40,6 +40,7 @@ function App() {
       const data = await res.text();
       localStorage.setItem("Token", data);
       localStorage.setItem("Role", jwtDecode(data).Role);
+      localStorage.setItem("Id", jwtDecode(data).Id);
       Swal.fire({
         position: 'center',
         icon: 'success',

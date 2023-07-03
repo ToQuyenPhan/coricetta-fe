@@ -130,7 +130,7 @@ function MenuDetails() {
 
                                     <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Chỉnh Sửa Menu</h2></DialogHeader>
                                     <DialogBody divider>
-                                        <form id="create" onSubmit={fetchUpdateMenuData}>
+                                        <form id="update" onSubmit={fetchUpdateMenuData}>
                                             <div className="mb-4">
                                                 <h5 className="text-left ml-3 font-bold">Tên menu:</h5>
                                                 <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
@@ -162,7 +162,7 @@ function MenuDetails() {
                                         >
                                             <span className="text-xl">Hủy bỏ</span>
                                         </Button>
-                                        <Button variant="gradient" color="green" type="submit" className=" bg-green-600 px-3 py-1" form="create">
+                                        <Button variant="gradient" color="green" type="submit" className=" bg-green-600 px-3 py-1" form="update">
                                             <span className="text-xl">Chỉnh sửa</span>
                                         </Button>
                                     </DialogFooter>
