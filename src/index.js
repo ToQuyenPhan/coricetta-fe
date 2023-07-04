@@ -15,6 +15,7 @@ import SearchPage from './pages/SearchPage';
 import MenuDetails from './pages/MenuDetailsPage';
 import Reports from './pages/ReportManagementPage';
 import RecipeCreate from './pages/CreateRecipePage';
+import RecipeReport from './pages/RecipeReportPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -32,6 +33,7 @@ root.render(
       <Route exact path="/menu-details" element={<MenuDetails/>}/>
       <Route exact path="/reports" element={<Reports/>}/>
       <Route exact path="/create" element={<RecipeCreate/>}/>
+      <Route exact path="/report" element={<RecipeReport/>}/>
     </Routes>
   </BrowserRouter>
 );

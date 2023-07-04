@@ -41,6 +41,10 @@ function Reports(){
         }
     }
 
+    const getRecipe = (id) => {
+        navigate('/report', {state: {recipeId: id}});
+      }
+
     useEffect(() => {
         if(localStorage.getItem('Role') && localStorage.getItem('Token')){
             fetchReportData();
@@ -75,6 +79,7 @@ function Reports(){
                             <TableCell>Công thức</TableCell>
                             <TableCell>Mô tả</TableCell>
                             <TableCell>Trạng thái</TableCell>
+                            <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -84,6 +89,7 @@ function Reports(){
                                 <TableCell>{report.recipeName}</TableCell>
                                 <TableCell>{report.description}</TableCell>
                                 <TableCell>{report.status}</TableCell>
+                                <TableCell><button className=' text-blue-700' onClick={() => getRecipe(report.recipeId)}>Xem chi tiết!</button></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
