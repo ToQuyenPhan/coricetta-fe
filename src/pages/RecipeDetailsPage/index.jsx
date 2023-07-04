@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { BiSolidFlag, BiLike, BiSolidLike } from 'react-icons/bi';
+import { BiSolidFlag, BiLike, BiSolidLike, BiSolidEdit } from 'react-icons/bi';
 import axios from "axios";
 import Header from "../../components/Header";
 import Comment from "./components/comment";
@@ -93,7 +93,7 @@ function RecipeDetail() {
       })
     }
   };
- 
+
   const fetchLikeData = async () => {
     const res = await fetch(`https://localhost:44327/api/Actions/getLike?userId=${userId}&recipeId=${recipeId}&Type=0`,
       {
@@ -106,7 +106,7 @@ function RecipeDetail() {
       const data = await res.json();
       setIsLiked(true);
       setLike(data);
-    } 
+    }
   }
 
   const handleLikeClick = async (event) => {
@@ -135,7 +135,7 @@ function RecipeDetail() {
     event.preventDefault();
     const res = await fetch(`https://localhost:44327/api/Actions?actionId=${like.id}`,
       {
-        mode: 'cors', method: 'DELETE', headers: new Headers({  
+        mode: 'cors', method: 'DELETE', headers: new Headers({
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         })
@@ -151,6 +151,10 @@ function RecipeDetail() {
   const handleDescriptionChange = event => {
     setDescription(event.target.value);
   };
+
+  const handleEditClick = (id) => {
+    navigate("/edit", { state: { recipeId: id } });
+  }
 
   useEffect(() => {
     fetchRecipeData();
@@ -229,7 +233,14 @@ function RecipeDetail() {
                               </Dialog>
                             </Fragment>
                           </div>
-                        ) : (<div></div>)}
+                        ) : (
+                          <div className="w-fit float-right">
+                            <Button onClick={() => handleEditClick(recipe.id)} variant="gradient" className="shadow-none text-black flex justify-center items-center 
+                        hover:cursor-pointer hover:text-gray-600">
+                              <span >Chỉnh sửa</span>
+                              <BiSolidEdit size={30} />
+                            </Button>
+                          </div>)}
                         <h3 className="quote">{recipe?.recipeName}</h3>
                         <span className="text-muted mr-3 mb-4">
                           Tác giả: <span className="font-bold">{recipe?.userName}</span>
@@ -276,23 +287,27 @@ function RecipeDetail() {
                             ))}
                           </ol>
                         </div>
-                        <div className=" mt-5">
-                          <h3>Đánh giá:</h3>
-                          {isLiked ? (
-                          <Button onClick={handleDislikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                        {parseInt(userId) !== parseInt(authorId) ? (
+                          <div className=" mt-5">
+                            <h3>Đánh giá:</h3>
+                            {isLiked ? (
+                              <Button onClick={handleDislikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
                         hover:cursor-pointer hover:text-blue-600 gap-2">
-                            <span >Like</span>
-                            <BiSolidLike size={30} />
-                          </Button>
-                          ) : (
-                          <Button onClick={handleLikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                                <span >Like</span>
+                                <BiSolidLike size={30} />
+                              </Button>
+                            ) : (
+                              <Button onClick={handleLikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
                         hover:cursor-pointer hover:text-blue-600 gap-2">
-                            <span >Like</span>
-                            <BiLike size={30} />
-                          </Button>
-                          )}
+                                <span >Like</span>
+                                <BiLike size={30} />
+                              </Button>
+                            )}
 
-                        </div>
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
                       </div>
                     </div>
                   </div>
