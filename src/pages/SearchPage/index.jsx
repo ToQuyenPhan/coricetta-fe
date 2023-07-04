@@ -70,6 +70,10 @@ function Search() {
     navigate("/recipeDetails", { state: { recipeId: id } });
   };
 
+  const getMenu = (id) => {
+    navigate('/menu-details', {state: {menuId: id}});
+  }
+
   useEffect(() => {
     if (localStorage) {
       var role = localStorage.getItem("Role");
@@ -213,6 +217,7 @@ function Search() {
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {menus.map(menu => (
+              <button onClick={() => getMenu(menu.id)}>
               <div key={menu.id} className="border shadow-lg hover:scale-105 duration-300 rounded-lg relative">
                 <img src="https://as1.ftcdn.net/v2/jpg/03/14/55/62/1000_F_314556236_hRwCkoZIayHyTW4IBjIizEaX8vc7XwV5.jpg" alt="/" className="w-full h-[200px] object-cover rounded-t-lg" />
                 <div className="flex justify-between px-2 py-4">
@@ -221,7 +226,7 @@ function Search() {
                     <span className="bg-orange-500 text-white p-1 rounded-full"></span>
                   </p>
                 </div>
-              </div>
+              </div></button>
             ))}
           </div>
         </div>

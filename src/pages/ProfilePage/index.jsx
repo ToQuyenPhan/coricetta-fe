@@ -128,37 +128,37 @@ function UserProfile()  {
             <div className="card mb-4">
               <div className="card-body">
                 <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Full Name</p>
+                  <div className="col-sm-3 inline-block">
+                    <p className="mb-0 font-bold mr-5">Tên người dùng: </p>
                   </div>
-                  <div className="col-sm-9">
+                  <div className="col-sm-9 inline-block">
                     <p className="text-muted mb-0">{profile?.userName}</p>
                   </div>
                 </div>
                 <hr />
                 <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Email</p>
+                  <div className="col-sm-3 inline-block">
+                    <p className="mb-0 font-bold mr-5">Email: </p>
                   </div>
-                  <div className="col-sm-9">
+                  <div className="col-sm-9 inline-block">
                     <p className="text-muted mb-0">{profile?.email}</p>
                   </div>
                 </div>
                 <hr />
                 <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Phone</p>
+                  <div className="col-sm-3 inline-block">
+                    <p className="mb-0 font-bold mr-5">Số điện thoại: </p>
                   </div>
-                  <div className="col-sm-9">
+                  <div className="col-sm-9 inline-block">
                     <p className="text-muted mb-0">{profile?.phoneNumber}</p>
                   </div>
                 </div>
                 <hr />
                 <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Role</p>
+                  <div className="col-sm-3 inline-block">
+                    <p className="mb-0 font-bold mr-5">Vai trò: </p>
                   </div>
-                  <div className="col-sm-9">
+                  <div className="col-sm-9 inline-block">
                     <p className="text-muted mb-0">{profile?.role}</p>
                   </div>
                 </div>

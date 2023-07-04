@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import axios from "axios";
 import { BiSolidEdit } from 'react-icons/bi';
+import { MdDeleteForever } from 'react-icons/md'
 import {
     Button,
     Dialog,
@@ -20,6 +21,7 @@ function MenuDetails() {
     const [mode, setMode] = useState('');
     const navigate = useNavigate();
     const token = localStorage.getItem("Token");
+    const userId = localStorage.getItem("Id");
     const location = useLocation();
     const menuId = location.state?.menuId;
     let modeStatus = 0;
@@ -95,6 +97,44 @@ function MenuDetails() {
         setMode(e.target.value);
     }
 
+    const handleDeleteClick = () => {
+        Swal.fire({
+            title: 'Bạn có chắc chắn xóa menu này không?',
+            text: "Menu này sẽ bị xóa vĩnh viễn!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Delete'
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+                const res = await fetch(`https://localhost:44327/api/Menus/delete?menuId=${menu.id}`, {
+                    mode: 'cors', method: 'DELETE', headers: new Headers({
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    })
+                });
+                if (res.status === 200) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Đã xóa thành công!',
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
+                    navigate("/my-menus");
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Someting wrong!'
+                    })
+                    navigate("/my-menus");
+                }
+            }
+          })
+    }
+
     useEffect(() => {
         fetchMenuData();
     }, []);
@@ -119,56 +159,65 @@ function MenuDetails() {
             ) : (
                 <div className="px-32">
                     <div className=" bg-orange-950 w-full relative">
-                        <div className="absolute top-5 right-5 hover:text-white">
-                            <Fragment className="grid place-items-center">
-                                <Button onClick={handleOpen} variant="gradient" className="shadow-none text-yellow-300 flex justify-center items-center 
-                    hover:cursor-pointer hover:text-white">
-                                    <span >Chỉnh sửa</span>
-                                    <BiSolidEdit size={30} />
-                                </Button>
-                                <Dialog open={open} handler={handleOpen} className="max-w-[1000px] text-center ">
+                        {parseInt(userId) === parseInt(menu.userId) ? (
+                            <div className="absolute top-5 right-5 hover:text-white flex">
+                                <Fragment className="grid place-items-center">
+                                    <Button onClick={handleOpen} variant="gradient" className="shadow-none text-yellow-300 flex justify-center items-center 
+                        hover:cursor-pointer hover:text-white">
+                                        <span >Chỉnh sửa</span>
+                                        <BiSolidEdit size={30} />
+                                    </Button>
+                                    <Dialog open={open} handler={handleOpen} className="max-w-[1000px] text-center ">
 
-                                    <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Chỉnh Sửa Menu</h2></DialogHeader>
-                                    <DialogBody divider>
-                                        <form id="update" onSubmit={fetchUpdateMenuData}>
-                                            <div className="mb-4">
-                                                <h5 className="text-left ml-3 font-bold">Tên menu:</h5>
-                                                <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
-                                                    type="text" placeholder="Nhập tên menu của bạn!" onChange={handleNameChange} value={name}
-                                                    required minLength={6} maxLength={50} />
-                                            </div>
-                                            <div className="mb-4">
-                                                <h5 className="text-left ml-3 font-bold">Mô tả:</h5>
-                                                <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
-                                                    type="text" placeholder="Nhập mô tả cho menu của bạn!" onChange={handleDescriptionChange} value={description}
-                                                    required minLength={10} maxLength={250} />
-                                            </div>
-                                            <div className="text-left" >
-                                                <h5 className="ml-3 font-bold mb-3">Chọn chế độ:</h5>
-                                                <input type="radio" value="public" checked={mode === "public"} onChange={handleModeChange}
-                                                    className="ml-5" />
-                                                Công khai
-                                                <input type="radio" value="private" checked={mode === "private"} onChange={handleModeChange} className="ml-3" />
-                                                Riêng tư
-                                            </div>
-                                        </form>
-                                    </DialogBody>
-                                    <DialogFooter className="flex justify-end">
-                                        <Button
-                                            variant="text"
-                                            color="red"
-                                            onClick={handleOpen}
-                                            className="mr-3"
-                                        >
-                                            <span className="text-xl">Hủy bỏ</span>
-                                        </Button>
-                                        <Button variant="gradient" color="green" type="submit" className=" bg-green-600 px-3 py-1" form="update">
-                                            <span className="text-xl">Chỉnh sửa</span>
-                                        </Button>
-                                    </DialogFooter>
-                                </Dialog>
-                            </Fragment>
-                        </div>
+                                        <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Chỉnh Sửa Menu</h2></DialogHeader>
+                                        <DialogBody divider>
+                                            <form id="update" onSubmit={fetchUpdateMenuData}>
+                                                <div className="mb-4">
+                                                    <h5 className="text-left ml-3 font-bold">Tên menu:</h5>
+                                                    <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                                        type="text" placeholder="Nhập tên menu của bạn!" onChange={handleNameChange} value={name}
+                                                        required minLength={6} maxLength={50} />
+                                                </div>
+                                                <div className="mb-4">
+                                                    <h5 className="text-left ml-3 font-bold">Mô tả:</h5>
+                                                    <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                                        type="text" placeholder="Nhập mô tả cho menu của bạn!" onChange={handleDescriptionChange} value={description}
+                                                        required minLength={10} maxLength={250} />
+                                                </div>
+                                                <div className="text-left" >
+                                                    <h5 className="ml-3 font-bold mb-3">Chọn chế độ:</h5>
+                                                    <input type="radio" value="public" checked={mode === "public"} onChange={handleModeChange}
+                                                        className="ml-5" />
+                                                    Công khai
+                                                    <input type="radio" value="private" checked={mode === "private"} onChange={handleModeChange} className="ml-3" />
+                                                    Riêng tư
+                                                </div>
+                                            </form>
+                                        </DialogBody>
+                                        <DialogFooter className="flex justify-end">
+                                            <Button
+                                                variant="text"
+                                                color="red"
+                                                onClick={handleOpen}
+                                                className="mr-3"
+                                            >
+                                                <span className="text-xl">Hủy bỏ</span>
+                                            </Button>
+                                            <Button variant="gradient" color="green" type="submit" className=" bg-green-600 px-3 py-1" form="update">
+                                                <span className="text-xl">Chỉnh sửa</span>
+                                            </Button>
+                                        </DialogFooter>
+                                    </Dialog>
+                                </Fragment>
+                                <Button onClick={handleDeleteClick} variant="gradient" className="shadow-none text-red-600 flex justify-center items-center 
+                        hover:cursor-pointer hover:text-white">
+                                        <span >Xóa</span>
+                                        <MdDeleteForever size={30} />
+                                    </Button>
+                            </div>
+
+                        ) : (<div></div>)}
+
                         <h1 className="py-20 font-extrabold text-yellow-600 text-6xl text-center">Menu</h1>
                         <h2 className="pb-5 font-extrabold text-white text-5xl text-center">{menu.menuName}</h2>
                         <h2 className="pb-20 font-extrabold text-white text-4xl text-center">{menu.description}</h2>

@@ -89,6 +89,7 @@ function MyRecipe() {
                   src={recipe?.image}
                   alt="/"
                 />
+                <span className=" bg-blue-600 text-white p-1 rounded-full px-3 py-1 absolute top-2 right-2">{recipe.status}</span>
               </div>
             ))}
           </div>

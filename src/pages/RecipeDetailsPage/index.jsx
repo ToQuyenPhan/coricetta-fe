@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { BiSolidFlag } from 'react-icons/bi';
+import { BiSolidFlag, BiLike, BiSolidLike } from 'react-icons/bi';
 import axios from "axios";
 import Header from "../../components/Header";
 import Comment from "./components/comment";
@@ -17,7 +17,9 @@ function RecipeDetail() {
   const [recipe, setRecipe] = useState(null);
   const [open, setOpen] = useState(false);
   const [isReported, setIsReported] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const [authorId, setAuthorId] = useState('');
+  const [like, setLike] = useState(null);
   const [description, setDescription] = useState('');
   const token = localStorage.getItem("Token");
   const userId = localStorage.getItem("Id");
@@ -91,6 +93,58 @@ function RecipeDetail() {
       })
     }
   };
+ 
+  const fetchLikeData = async () => {
+    const res = await fetch(`https://localhost:44327/api/Actions/getLike?userId=${userId}&recipeId=${recipeId}&Type=0`,
+      {
+        mode: 'cors', method: 'GET', headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        })
+      });
+    if (res.status === 200) {
+      const data = await res.json();
+      setIsLiked(true);
+      setLike(data);
+    } 
+  }
+
+  const handleLikeClick = async (event) => {
+    event.preventDefault();
+    const res = await fetch("https://localhost:44327/api/Actions/create",
+      {
+        mode: 'cors', method: 'POST', headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({ "recipeId": recipeId, "type": 0, "content": null })
+      });
+    if (res.status === 200) {
+      fetchLikeData();
+    } else {
+      const data = await res.text();
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: data
+      })
+    }
+  };
+
+  const handleDislikeClick = async (event) => {
+    event.preventDefault();
+    const res = await fetch(`https://localhost:44327/api/Actions?actionId=${like.id}`,
+      {
+        mode: 'cors', method: 'DELETE', headers: new Headers({  
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        })
+      });
+    if (res.status === 200) {
+      setIsLiked(false);
+      fetchLikeData();
+    }
+  };
 
   const handleOpen = () => setOpen(!open);
 
@@ -101,6 +155,7 @@ function RecipeDetail() {
   useEffect(() => {
     fetchRecipeData();
     fetchReportedRecipeData();
+    fetchLikeData();
   }, []);
 
   return (
@@ -220,6 +275,23 @@ function RecipeDetail() {
                               </li>
                             ))}
                           </ol>
+                        </div>
+                        <div className=" mt-5">
+                          <h3>Đánh giá:</h3>
+                          {isLiked ? (
+                          <Button onClick={handleDislikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                        hover:cursor-pointer hover:text-blue-600 gap-2">
+                            <span >Like</span>
+                            <BiSolidLike size={30} />
+                          </Button>
+                          ) : (
+                          <Button onClick={handleLikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                        hover:cursor-pointer hover:text-blue-600 gap-2">
+                            <span >Like</span>
+                            <BiLike size={30} />
+                          </Button>
+                          )}
+
                         </div>
                       </div>
                     </div>
