@@ -61,14 +61,15 @@ const UserList = () => {
             <AdminHeader />
             <br />
             <Title title="Book list" />
-            <TextField
+            {/* <TextField
                 label="Search"
                 value={filter}
                 onChange={e => setFilter(e.target.value)}
                 variant="filled"
                 size="small"
                 margin="dense"
-            />
+            /> */}
+            <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các người dùng:</h1>
             <Card>
                 <Table sx={{ padding: 2 }} size="small">
                     <TableHead>

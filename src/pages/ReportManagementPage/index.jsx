@@ -64,17 +64,18 @@ function Reports(){
              <AdminHeader />
             <br />
             <Title title="Book list" />
-            <TextField
+            {/* <TextField
                 label="Search"
                 value={filter}
                 onChange={e => setFilter(e.target.value)}
                 variant="filled"
                 size="small"
                 margin="dense"
-            />
+            /> */}
+            <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các báo cáo:</h1>
             <Card>
-                
                     {reports?.length >= 0 ? (
+                        
                         <Table sx={{ padding: 2 }} size="small">
                         <TableHead>
                             <TableRow>
