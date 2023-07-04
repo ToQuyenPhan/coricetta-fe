@@ -1,32 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from "../../components/Header";
 //import 'bootstrap/dist/js/bootstrap.min.js';
-import jwt_decode from 'jwt-decode';
+import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
+import Swal from 'sweetalert2';
+import { BiSolidEdit } from 'react-icons/bi';
 
 
 
-function UserProfile()  {
-    const [profile, setProfile] = useState(null);
-    const [tokenUser, setTokenUser] = useState(null);
+function UserProfile() {
+  const [profile, setProfile] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
   const token = localStorage.getItem("Token");
-  const location = useLocation();
-  const user = location.state?.user;
+  const userId = localStorage.getItem("Id");
   const navigate = useNavigate();
-
-  const getUserId=()=> {
-    if (token) {
-        // Decode the token to get user information
-        const decodedToken = jwt_decode(token);
-        setTokenUser(decodedToken);
-        console.log("tokenUser", JSON.stringify(decodedToken));
-      }
-  }
 
   const fetchProfileData = async () => {
     const res = await fetch(
-      `https://localhost:44327/api/Users/byId?userId=${tokenUser.Id}`,
+      `https://localhost:44327/api/Users/byId?userId=${userId}`,
       {
         mode: "cors",
         method: "GET",
@@ -34,15 +36,68 @@ function UserProfile()  {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
           Accept: "application/json",
-        }),         
+        }),
       }
     );
     if (res.status === 200) {
       const data = await res.json();
       setProfile(data);
+      setName(data.userName);
+      setEmail(data.email);
+      setPassword(data.password);
+      setPhone(data.phoneNumber);
       console.log("data", JSON.stringify(data));
     }
 
+  };
+
+  const fetchUpdateMenuData = async (e) => {
+    setOpen(!open);
+    e.preventDefault();
+    const res = await fetch("https://localhost:44327/api/Users/update",
+      {
+        mode: 'cors', method: 'PUT', headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({ "userId": userId, "userName": name, "email": email, "password": password, "phoneNumber": phone, 
+          "role": "USER", "status": 1})
+      });
+    if (res.status === 200) {
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Chỉnh sửa hồ sơ thành công!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      fetchProfileData();
+    } else {
+      const data = await res.text();
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: data
+      })
+    }
+  };
+
+  const handleOpen = () => setOpen(!open);
+
+  const handleNameChange = event => {
+    setName(event.target.value);
+  };
+
+  const handleEmailChange = event => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = event => {
+    setPassword(event.target.value);
+  };
+
+  const handlePhoneChange = event => {
+    setPhone(event.target.value);
   };
 
   useEffect(() => {
@@ -51,24 +106,18 @@ function UserProfile()  {
       if (role !== "USER") {
         navigate("/");
       } else {
-        getUserId();
-        // fetchProfileData();
+        fetchProfileData();
       }
     }
   }, []);
 
-  useEffect(()=>{
-    if(tokenUser !== null){
-      fetchProfileData();
-    }
-  },[tokenUser])
   return (
     <div>
-        <Header/>
-                {profile !== null ? (
-    <section style={{ backgroundColor: '#eee' }}>
-            <div className="container py-5">
-        {/* <div className="row">
+      <Header />
+      {profile !== null ? (
+        <section style={{ backgroundColor: '#eee' }}>
+          <div className="container py-5">
+            {/* <div className="row">
           <div className="col">
             <nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
               <ol className="breadcrumb mb-0">
@@ -80,24 +129,79 @@ function UserProfile()  {
           </div>
         </div> */}
 
-        <div className="row">
-          <div className="col-lg-4">
-            <div className="card mb-4">
-              <div className="card-body text-center">
-                <div  style={{ display: 'flex', justifyContent: 'center'}}>
+            <div className="row">
+              <div className="col-lg-4">
+                <div className="card mb-4">
+                  <div className="card-body text-center relative">
+                    <div className="absolute top-1 right-1 hover:text-white flex">
+                      <Fragment className="grid place-items-center">
+                        <Button onClick={handleOpen} variant="gradient" className="shadow-none text-black flex justify-center items-center 
+                        hover:cursor-pointer hover:text-yellow-300">
+                          <span >Chỉnh sửa hồ sơ</span>
+                          <BiSolidEdit size={30} />
+                        </Button>
+                        <Dialog open={open} handler={handleOpen} className="max-w-[1000px] text-center ">
 
-                <img src="https://www.shareicon.net/data/128x128/2016/09/01/822751_user_512x512.png" alt="avatar" className="rounded-circle img-fluid" style={{ width: '100px' }} />
-                </div>
-                <h5 className="my-3">{profile?.userName}</h5>
-                {/* <p className="text-muted mb-1">{profile?.phoneNumber}</p>
+                          <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Chỉnh Sửa Hồ Sơ</h2></DialogHeader>
+                          <DialogBody divider>
+                            <form id="update" onSubmit={fetchUpdateMenuData}>
+                              <div className="mb-4">
+                                <h5 className="text-left ml-3 font-bold">Tên người dùng:</h5>
+                                <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                  type="text" placeholder="Nhập họ và tên của bạn!" onChange={handleNameChange} value={name}
+                                  required minLength={6} maxLength={50} />
+                              </div>
+                              <div className="mb-4">
+                                <h5 className="text-left ml-3 font-bold">Email:</h5>
+                                <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                  type="email" placeholder="Nhập địa chỉ email mới của bạn!" onChange={handleEmailChange} value={email}
+                                  required minLength={5} maxLength={50} />
+                              </div>
+                              <div className="mb-4">
+                                <h5 className="text-left ml-3 font-bold">Mật khẩu:</h5>
+                                <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                  type="text" placeholder="Nhập mật khẩu mới của bạn!" onChange={handlePasswordChange} value={password}
+                                  required minLength={5} maxLength={50} />
+                              </div>
+                              <div className="mb-4">
+                                <h5 className="text-left ml-3 font-bold">Số điện thoại:</h5>
+                                <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                  type="text" placeholder="Nhập số điện thoại mới của bạn!" onChange={handlePhoneChange} value={phone}
+                                  required minLength={5} maxLength={50} />
+                              </div>
+                            </form>
+                          </DialogBody>
+                          <DialogFooter className="flex justify-end">
+                            <Button
+                              variant="text"
+                              color="red"
+                              onClick={handleOpen}
+                              className="mr-3"
+                            >
+                              <span className="text-xl">Hủy bỏ</span>
+                            </Button>
+                            <Button variant="gradient" color="green" type="submit" className=" bg-green-600 px-3 py-1" form="update">
+                              <span className="text-xl">Chỉnh sửa</span>
+                            </Button>
+                          </DialogFooter>
+                        </Dialog>
+                      </Fragment>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+
+                      <img src="https://www.shareicon.net/data/128x128/2016/09/01/822751_user_512x512.png" alt="avatar" className="rounded-circle img-fluid" style={{ width: '100px' }} />
+                    </div>
+                    <h5 className="my-3">{profile?.userName}</h5>
+                    {/* <p className="text-muted mb-1">{profile?.phoneNumber}</p>
                 <p className="text-muted mb-4">{profile?.email}</p> */}
-                {/* <div className="d-flex justify-content-center mb-2">
+                    {/* <div className="d-flex justify-content-center mb-2">
                   <button type="button" className="btn btn-primary">Follow</button>
                   <button type="button" className="btn btn-outline-primary ms-1">Message</button>
                 </div> */}
-              </div>
-            </div>
-            {/* <div className="card mb-4 mb-lg-0">
+                  </div>
+                </div>
+                {/* <div className="card mb-4 mb-lg-0">
               <div className="card-body p-0">
                 <ul className="list-group list-group-flush rounded-3">
                   <li className="list-group-item d-flex justify-content-between align-items-center p-3">
@@ -123,48 +227,48 @@ function UserProfile()  {
                 </ul>
               </div>
             </div> */}
-          </div>
-          <div className="col-lg-8">
-            <div className="card mb-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-sm-3 inline-block">
-                    <p className="mb-0 font-bold mr-5">Tên người dùng: </p>
-                  </div>
-                  <div className="col-sm-9 inline-block">
-                    <p className="text-muted mb-0">{profile?.userName}</p>
+              </div>
+              <div className="col-lg-8">
+                <div className="card mb-4">
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-sm-3 inline-block">
+                        <p className="mb-0 font-bold mr-5">Tên người dùng: </p>
+                      </div>
+                      <div className="col-sm-9 inline-block">
+                        <p className="text-muted mb-0">{profile?.userName}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3 inline-block">
+                        <p className="mb-0 font-bold mr-5">Email: </p>
+                      </div>
+                      <div className="col-sm-9 inline-block">
+                        <p className="text-muted mb-0">{profile?.email}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3 inline-block">
+                        <p className="mb-0 font-bold mr-5">Số điện thoại: </p>
+                      </div>
+                      <div className="col-sm-9 inline-block">
+                        <p className="text-muted mb-0">{profile?.phoneNumber}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3 inline-block">
+                        <p className="mb-0 font-bold mr-5">Vai trò: </p>
+                      </div>
+                      <div className="col-sm-9 inline-block">
+                        <p className="text-muted mb-0">{profile?.role}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <hr />
-                <div className="row">
-                  <div className="col-sm-3 inline-block">
-                    <p className="mb-0 font-bold mr-5">Email: </p>
-                  </div>
-                  <div className="col-sm-9 inline-block">
-                    <p className="text-muted mb-0">{profile?.email}</p>
-                  </div>
-                </div>
-                <hr />
-                <div className="row">
-                  <div className="col-sm-3 inline-block">
-                    <p className="mb-0 font-bold mr-5">Số điện thoại: </p>
-                  </div>
-                  <div className="col-sm-9 inline-block">
-                    <p className="text-muted mb-0">{profile?.phoneNumber}</p>
-                  </div>
-                </div>
-                <hr />
-                <div className="row">
-                  <div className="col-sm-3 inline-block">
-                    <p className="mb-0 font-bold mr-5">Vai trò: </p>
-                  </div>
-                  <div className="col-sm-9 inline-block">
-                    <p className="text-muted mb-0">{profile?.role}</p>
-                  </div>
-                </div>
-                              </div>
-            </div>
-            {/* <div className="row">
+                {/* <div className="row">
               <div className="col-md-6">
                 <div className="card mb-4 mb-md-0">
                   <div className="card-body">
@@ -220,11 +324,13 @@ function UserProfile()  {
                 </div>
               </div>
             </div> */}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-</section>
-) : null}
-</div>
-  )}
-  export default UserProfile;
+
+        </section>
+      ) : null}
+    </div>
+  )
+}
+export default UserProfile;
