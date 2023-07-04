@@ -15,6 +15,7 @@ import {
     TableCell,
 } from '@mui/material';
 import AdminHeader from '../../components/AdminHeader';
+import EmptyBox from '../../assets/empty.png';
 
 function Reports(){
     const [reports, setReports] = useState([])
@@ -41,9 +42,9 @@ function Reports(){
         }
     }
 
-    const getRecipe = (id) => {
-        navigate('/report', {state: {recipeId: id}});
-      }
+    const getRecipe = (id, userId) => {
+        navigate('/report', {state: {recipeId: id, userId: userId}});
+    }
 
     useEffect(() => {
         if(localStorage.getItem('Role') && localStorage.getItem('Token')){
@@ -72,28 +73,45 @@ function Reports(){
                 margin="dense"
             />
             <Card>
-                <Table sx={{ padding: 2 }} size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Người báo cáo</TableCell>
-                            <TableCell>Công thức</TableCell>
-                            <TableCell>Mô tả</TableCell>
-                            <TableCell>Trạng thái</TableCell>
-                            <TableCell></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
+                
+                    {reports?.length >= 0 ? (
+                        <Table sx={{ padding: 2 }} size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Người báo cáo</TableCell>
+                                <TableCell>Công thức</TableCell>
+                                <TableCell>Mô tả</TableCell>
+                                <TableCell>Trạng thái</TableCell>
+                                <TableCell></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
                         {reports.map((report,index) => (
                             <TableRow key={index}>
                                 <TableCell>{report.userName}</TableCell>
                                 <TableCell>{report.recipeName}</TableCell>
                                 <TableCell>{report.description}</TableCell>
                                 <TableCell>{report.status}</TableCell>
-                                <TableCell><button className=' text-blue-700' onClick={() => getRecipe(report.recipeId)}>Xem chi tiết!</button></TableCell>
+                                <TableCell><button className=' text-blue-700' onClick={() => getRecipe(report.recipeId, report.userId)}>Xem chi tiết!</button></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
-                </Table>
+                    </Table>
+                    ) : (<div className="my-5 text-center">
+                    <div>
+                      <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Không có báo cáo nào!</h1>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <div className="flex justify-center items-center">
+                      <img src={EmptyBox} alt="..." width={300} height={300} />
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                  </div>) }   
+                
             </Card>
             <Toolbar>
                 {/* {page > 1 && <Button onClick={() => setPage(page - 1)}>Previous page</Button>}

@@ -7,13 +7,12 @@ import Swal from 'sweetalert2';
 
 function RecipeReport() {
     const [recipe, setRecipe] = useState(null);
-    const [open, setOpen] = useState(false);
-    const [description, setDescription] = useState('');
     const token = localStorage.getItem("Token");
     const userId = localStorage.getItem("Id");
     const navigate = useNavigate();
     const location = useLocation();
     const recipeId = location.state?.recipeId;
+    const reporterId = location.state?.userId;
 
     const fetchRecipeData = () => {
         let config = {
@@ -37,6 +36,60 @@ function RecipeReport() {
                 console.log(error);
             });
     };
+
+    const handleApproveClick = async () => {
+        const res = await fetch("https://localhost:44327/api/Reports/approve", {
+            mode: 'cors', method: 'PUT', headers: new Headers({
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({ "userId": reporterId, "recipeId": recipeId})
+        });
+        if (res.status === 200) {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Phê duyệt thành công!',
+                showConfirmButton: false,
+                timer: 1500
+              });
+            navigate("/reports");
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Someting wrong!'
+            })
+            navigate("/reports");
+        }
+    }
+
+    const handleRejectClick = async () => {
+        const res = await fetch("https://localhost:44327/api/Reports/reject", {
+            mode: 'cors', method: 'PUT', headers: new Headers({
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({ "userId": reporterId, "recipeId": recipeId})
+        });
+        if (res.status === 200) {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Đã từ chối báo cáo!',
+                showConfirmButton: false,
+                timer: 1500
+              });
+            navigate("/reports");
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Someting wrong!'
+            })
+            navigate("/reports");
+        }
+    }
 
     useEffect(() => {
         fetchRecipeData();
@@ -118,8 +171,8 @@ function RecipeReport() {
                                                 </div>
                                                 <div className=" flex gap-2 justify-end">
                                                     <Button onClick={() => navigate("/reports")} className=" hover:text-black mr-2" color="secondary">Hủy bỏ</Button>
-                                                    <Button className="mr-2" variant="contained" color="error">Từ chối</Button>
-                                                    <Button variant="contained" color="success">
+                                                    <Button onClick={handleRejectClick} className="mr-2" variant="contained" color="error">Từ chối</Button>
+                                                    <Button onClick={handleApproveClick} variant="contained" color="success">
                                                         Phê duyệt
                                                     </Button>
                                                 </div>
