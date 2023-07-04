@@ -16,6 +16,8 @@ import Swal from 'sweetalert2';
 function RecipeDetail() {
   const [recipe, setRecipe] = useState(null);
   const [open, setOpen] = useState(false);
+  const [isReported, setIsReported] = useState(false);
+  const [authorId, setAuthorId] = useState('');
   const [description, setDescription] = useState('');
   const token = localStorage.getItem("Token");
   const userId = localStorage.getItem("Id");
@@ -40,10 +42,24 @@ function RecipeDetail() {
       .then((response) => {
         console.log("data", JSON.stringify(response.data));
         setRecipe(response?.data);
+        setAuthorId(response.data.userId);
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const fetchReportedRecipeData = async () => {
+    const res = await fetch(`https://localhost:44327/api/Reports/find?userId=${userId}&recipeId=${recipeId}`,
+      {
+        mode: 'cors', method: 'GET', headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }),
+      });
+    if (res.status === 200) {
+      setIsReported(true);
+    }
   };
 
   const fetchReportRecipeData = async (e) => {
@@ -84,6 +100,7 @@ function RecipeDetail() {
 
   useEffect(() => {
     fetchRecipeData();
+    fetchReportedRecipeData();
   }, []);
 
   return (
@@ -113,42 +130,51 @@ function RecipeDetail() {
                     <div className="single-blog-item">
                       <div className="blog-item-content p-5">
                         <br />
-                        <div className="w-fit float-right mr-5">
-                          <Fragment className="grid place-items-center">
-                            <Button onClick={handleOpen} variant="gradient" className="shadow-none text-yellow-400 hover:text-red-600 flex justify-center items-center 
-                    hover:cursor-pointer">
-                              <span >Báo cáo</span>
-                              <BiSolidFlag size={20} />
-                            </Button>
-                            <Dialog open={open} handler={handleOpen} className="max-w-[1000px] text-center ">
+                        {parseInt(userId) !== parseInt(authorId) ? (
+                          <div className="w-fit float-right mr-5">
+                            <Fragment className="grid place-items-center">
+                              {isReported ? (
+                                <div variant="gradient" className="shadow-none text-red-600">
+                                  <span >Bạn đã báo cáo công thức!</span>
+                                </div>
+                              ) : (
+                                <Button onClick={handleOpen} variant="gradient" className="shadow-none text-yellow-400 hover:text-red-600 flex justify-center items-center 
+                                hover:cursor-pointer">
+                                  <span >Báo cáo</span>
+                                  <BiSolidFlag size={20} />
+                                </Button>
+                              )}
 
-                              <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Báo cáo công thức</h2></DialogHeader>
-                              <DialogBody divider>
-                                <form id="report" onSubmit={fetchReportRecipeData}>
-                                  <div className="mb-4">
-                                    <h5 className="text-left ml-3 font-bold">Mô tả:</h5>
-                                    <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
-                                      type="text" placeholder="Nhập mô tả về hành vi của công thức!" onChange={handleDescriptionChange} value={description}
-                                      required minLength={10} maxLength={250} />
-                                  </div>
-                                </form>
-                              </DialogBody>
-                              <DialogFooter className="flex justify-end">
-                                <Button
-                                  variant="text"
-                                  color="red"
-                                  onClick={handleOpen}
-                                  className="mr-3"
-                                >
-                                  <span className="text-xl">Hủy bỏ</span>
-                                </Button>
-                                <Button variant="gradient" color="red" type="submit" className=" bg-red-600 px-3 py-1" form="report">
-                                  <span className="text-xl">Báo cáo</span>
-                                </Button>
-                              </DialogFooter>
-                            </Dialog>
-                          </Fragment>
-                        </div>
+                              <Dialog open={open} handler={handleOpen} className="max-w-[1000px] text-center ">
+
+                                <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Báo cáo công thức</h2></DialogHeader>
+                                <DialogBody divider>
+                                  <form id="report" onSubmit={fetchReportRecipeData}>
+                                    <div className="mb-4">
+                                      <h5 className="text-left ml-3 font-bold">Mô tả:</h5>
+                                      <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                        type="text" placeholder="Nhập mô tả về hành vi của công thức!" onChange={handleDescriptionChange} value={description}
+                                        required minLength={10} maxLength={250} />
+                                    </div>
+                                  </form>
+                                </DialogBody>
+                                <DialogFooter className="flex justify-end">
+                                  <Button
+                                    variant="text"
+                                    color="red"
+                                    onClick={handleOpen}
+                                    className="mr-3"
+                                  >
+                                    <span className="text-xl">Hủy bỏ</span>
+                                  </Button>
+                                  <Button variant="gradient" color="red" type="submit" className=" bg-red-600 px-3 py-1" form="report">
+                                    <span className="text-xl">Báo cáo</span>
+                                  </Button>
+                                </DialogFooter>
+                              </Dialog>
+                            </Fragment>
+                          </div>
+                        ) : (<div></div>)}
                         <h3 className="quote">{recipe?.recipeName}</h3>
                         <span className="text-muted mr-3 mb-4">
                           Tác giả: <span className="font-bold">{recipe?.userName}</span>
