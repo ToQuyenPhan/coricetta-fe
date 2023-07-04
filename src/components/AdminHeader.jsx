@@ -41,6 +41,10 @@ function AdminHeader() {
                     <Link to="/reports" className="text-sm font-semibold leading-6 text-gray-900 no-underline flex items-center gap-1">
                         <BiSolidReport size={20} /><span>Reports</span>
                     </Link>
+                    <Link to="/" className="text-sm font-semibold leading-6 text-gray-900 no-underline flex items-center gap-1">
+                                    <AiOutlineLogout size={20} />
+                                    <span>Log out</span>
+                                </Link>
                 </Popover.Group>
             </div>
         </div>
