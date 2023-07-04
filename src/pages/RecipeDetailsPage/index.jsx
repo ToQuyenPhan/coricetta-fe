@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { BiSolidFlag, BiLike, BiSolidLike, BiSolidEdit } from 'react-icons/bi';
+import { MdDeleteForever } from 'react-icons/md';
 import axios from "axios";
 import Header from "../../components/Header";
 import Comment from "./components/comment";
@@ -107,6 +108,44 @@ function RecipeDetail() {
       setIsLiked(true);
       setLike(data);
     }
+  }
+
+  const handleDeleteClick = () => {
+    Swal.fire({
+      title: 'Bạn có chắc chắn xóa công thức này không?',
+      text: "Công thức này sẽ bị xóa vĩnh viễn!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Delete'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await fetch(`https://localhost:44327/api/Recipes/delete?recipeid=${recipeId}`, {
+          mode: 'cors', method: 'DELETE', headers: new Headers({
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          })
+        });
+        if (res.status === 200) {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Đã xóa thành công!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          navigate("/my-recipes");
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Someting wrong!'
+          })
+          navigate("/my-recipes");
+        }
+      }
+    })
   }
 
   const handleLikeClick = async (event) => {
@@ -234,12 +273,17 @@ function RecipeDetail() {
                             </Fragment>
                           </div>
                         ) : (
-                          <div className="w-fit float-right">
+                          <div className="w-fit float-right flex">
                             <Button onClick={() => handleEditClick(recipe.id)} variant="gradient" className="shadow-none text-black flex justify-center items-center 
                         hover:cursor-pointer hover:text-gray-600">
                               <span >Chỉnh sửa</span>
                               <BiSolidEdit size={30} />
                             </Button>
+                            <Button onClick={handleDeleteClick} variant="gradient" className="shadow-none text-red-600 flex justify-center items-center 
+                        hover:cursor-pointer hover:text-gray-600">
+                                        <span >Xóa</span>
+                                        <MdDeleteForever size={30} />
+                                    </Button>
                           </div>)}
                         <h3 className="quote">{recipe?.recipeName}</h3>
                         <span className="text-muted mr-3 mb-4">
