@@ -1,13 +1,18 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { BiSolidEdit } from 'react-icons/bi';
 import "../index.css";
 import Swal from 'sweetalert2';
 
 function Comment() {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingId, setIsEditingId] = useState(0);
+  const [editingComment, setEditingComment] = useState('');
   const token = localStorage.getItem("Token");
+  const userId = localStorage.getItem("Id");
   const location = useLocation();
   const recipeId = location.state?.recipeId;
 
@@ -26,8 +31,7 @@ function Comment() {
     axios
       .request(config)
       .then((response) => {
-        console.log("comment", JSON.stringify(response.data));
-        setComments(response?.data);
+        setComments(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -41,6 +45,25 @@ function Comment() {
   const handleCommentChange = event => {
     setComment(event.target.value);
   };
+
+  const handleEditingCommentChange = event => {
+    setEditingComment(event.target.value);
+  };
+
+  const handleEditClick = (id, content) => {
+    setIsEditing(true);
+    setIsEditingId(id);
+    setEditingComment(content);
+  }
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setIsEditingId(0);
+  }
+  
+  const handleSubmitClick = () => {
+    alert(editingComment);
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -85,27 +108,55 @@ function Comment() {
           </form>
         </div>
         <h3 className="pl-5">Một số bình luận: </h3>
-        {comments?.items.map((item, index) => (
-          <div className="row" key={index}>
-            <div className="col-8">
-              <div className="card card-white post">
-                <div className="post-heading">
-                  <div className="float-left meta">
-                    <div className="title h5">
-                      <b>{item?.username}</b>
+        {comments?.items.map(item => (
+          <div className="row relative">
+            {isEditing && parseInt(isEditingId) === parseInt(item?.id) ? (
+              <div className="col-8">
+                <div className="card card-white post">
+                  <div className="post-heading">
+                    <div className="float-left meta">
+                      <div className="title h5">
+                        <b>{item?.username}</b>
+                      </div>
+                      <h6 className="text-muted time">{item?.dateTime}</h6>
                     </div>
-                    <h6 className="text-muted time">{item?.dateTime}</h6>
+                  </div>
+                  <div className="post-description">
+                    <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0 block'
+                      type="text" placeholder="Hãy để lại bình luận của bạn!" required onChange={handleEditingCommentChange} value={editingComment}
+                      minLength={1} maxLength={50} />
+                    <p onClick={handleCancelClick} className="hover:cursor-pointer hover:underline mt-2 inline-block mx-2">Hủy</p>
+                    <p onClick={handleSubmitClick} className="hover:cursor-pointer hover:underline mt-2 inline-block">Chỉnh sửa</p>
                   </div>
                 </div>
-                <div className="post-description">
-                  <p>{item?.content}</p>
+              </div>
+            ) : (
+              <div className="col-8">
+                <div className="card card-white post">
+                  <div className="post-heading">
+                    <div className="float-left meta">
+                      <div className="title h5">
+                        <b>{item?.username}</b>
+                      </div>
+                      <h6 className="text-muted time">{item?.dateTime}</h6>
+                    </div>
+                  </div>
+                  <div className="post-description">
+                    <p className="text-2xl">{item?.content}</p>
+                    {parseInt(userId) === parseInt(item?.userId) ? (
+                      <p onClick={() => handleEditClick(item?.id, item?.content)} className="hover:cursor-pointer hover:underline mt-2">Chỉnh sửa</p>
+
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         ))}
-
       </div>
+
     </div>
   );
 }
