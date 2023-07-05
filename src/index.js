@@ -17,6 +17,7 @@ import Reports from './pages/ReportManagementPage';
 import RecipeCreate from './pages/CreateRecipePage';
 import RecipeReport from './pages/RecipeReportPage';
 import Edit from './pages/EditRecipePage';
+import ShoppingList from './pages/ShoppingListPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -36,6 +37,7 @@ root.render(
       <Route exact path="/create" element={<RecipeCreate/>}/>
       <Route exact path="/report" element={<RecipeReport/>}/>
       <Route exact path="/edit" element={<Edit/>}/>
+      <Route exact path="/shopping" element={<ShoppingList/>}/>
     </Routes>
   </BrowserRouter>
 );

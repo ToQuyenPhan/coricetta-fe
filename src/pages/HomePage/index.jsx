@@ -9,7 +9,7 @@ function Home() {
     const [categories, setCategories] = useState([]);
     const token = localStorage.getItem('Token');
     const navigate = useNavigate();
-    let url = "https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=8&recipeStatus=1";
+    let url = "https://localhost:44327/api/Recipes/all?currentPage=1&pageSize=20&recipeStatus=1";
 
     const fetchRecipeData = async (level,category) => {      
         switch(level){
