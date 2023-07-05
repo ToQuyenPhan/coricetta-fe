@@ -61,8 +61,20 @@ function Comment() {
     setIsEditingId(0);
   }
   
-  const handleSubmitClick = () => {
-    alert(editingComment);
+  const handleSubmitClick = async (id) => {
+    const res = await fetch(`https://localhost:44327/api/Actions/update?actionId=${id}`,
+      {
+        mode: 'cors', method: 'PUT', headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({ "recipeId": recipeId, "type": 1, "content": editingComment })
+      });
+    if (res.status === 200) {
+      fetchCommentData();
+      setIsEditing(false);
+      setIsEditingId(0);
+    }
   }
 
   const handleSubmit = async (event) => {
@@ -126,7 +138,7 @@ function Comment() {
                       type="text" placeholder="Hãy để lại bình luận của bạn!" required onChange={handleEditingCommentChange} value={editingComment}
                       minLength={1} maxLength={50} />
                     <p onClick={handleCancelClick} className="hover:cursor-pointer hover:underline mt-2 inline-block mx-2">Hủy</p>
-                    <p onClick={handleSubmitClick} className="hover:cursor-pointer hover:underline mt-2 inline-block">Chỉnh sửa</p>
+                    <p onClick={() => handleSubmitClick(item?.id)} className="hover:cursor-pointer hover:underline mt-2 inline-block">Chỉnh sửa</p>
                   </div>
                 </div>
               </div>
@@ -138,7 +150,7 @@ function Comment() {
                       <div className="title h5">
                         <b>{item?.username}</b>
                       </div>
-                      <h6 className="text-muted time">{item?.dateTime}</h6>
+                      <h6 className="text-muted time">{item?.dateTimeString}</h6>
                     </div>
                   </div>
                   <div className="post-description">
