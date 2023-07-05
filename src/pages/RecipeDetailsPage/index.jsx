@@ -337,7 +337,7 @@ function RecipeDetail() {
                           <ol className="list-group">
                             {recipe.steps.map((step, index) => (
                               <li key={index} className="list-group-item">
-                                Step {step.stepNumber}: {step.description}
+                                Bước {step.stepNumber}: {step.description}
                               </li>
                             ))}
                           </ol>
