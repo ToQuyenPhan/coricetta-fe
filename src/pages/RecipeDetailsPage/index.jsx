@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { BiSolidFlag, BiLike, BiSolidLike, BiSolidEdit } from 'react-icons/bi';
+import { BiSolidFlag, BiLike, BiSolidLike, BiSolidEdit, BiCart} from 'react-icons/bi';
 import { MdDeleteForever } from 'react-icons/md';
 import axios from "axios";
 import Header from "../../components/Header";
@@ -195,6 +195,10 @@ function RecipeDetail() {
     navigate("/edit", { state: { recipeId: id } });
   }
 
+  const handleShoppingClick = (id) => {
+    navigate("/shoppinglist", { state: { recipeId: id } });
+  }
+
   useEffect(() => {
     fetchRecipeData();
     fetchReportedRecipeData();
@@ -284,6 +288,11 @@ function RecipeDetail() {
                                         <span >Xóa</span>
                                         <MdDeleteForever size={30} />
                                     </Button>
+                                    <Button onClick={() => handleShoppingClick(recipe.id)} variant="gradient" className="shadow-none text-black flex justify-center items-center 
+                        hover:cursor-pointer hover:text-gray-600">
+                              <span >Shopping</span>
+                              <BiCart size={30} />
+                            </Button>
                           </div>)}
                         <h3 className="quote">{recipe?.recipeName}</h3>
                         <span className="text-muted mr-3 mb-4">
