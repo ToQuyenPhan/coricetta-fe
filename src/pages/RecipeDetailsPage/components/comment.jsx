@@ -252,15 +252,15 @@ function Comment() {
                                             item?.content
                                           )
                                         }
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
                                       >
-                                        Update
+                                        Chỉnh sửa
                                       </Popover.Button>
                                       <Popover.Button
                                         onClick={() => handleDelete(item?.id)}
-                                        className="block px-4 py-2 text-sm text-red-600 hover:bg-red-100"
+                                        className="block px-4 py-2 text-sm text-red-600 hover:bg-red-100 w-full"
                                       >
-                                        Delete
+                                        Xóa
                                       </Popover.Button>
                                     </Popover.Panel>
                                   </Transition>
