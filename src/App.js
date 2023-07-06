@@ -20,7 +20,8 @@ function App() {
       var role = localStorage.getItem('Role');
       if(role === 'USER'){
         localStorage.removeItem("Token");
-        localStorage.removeItem("Role")
+        localStorage.removeItem("Role");
+        localStorage.removeItem("Id");
       }
     }
 }, [message])

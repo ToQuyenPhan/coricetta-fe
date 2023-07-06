@@ -10,7 +10,6 @@ function SignUp() {
   const [confirmPassword, setConfirmPasword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   let headers = new Headers();
@@ -25,7 +24,7 @@ function SignUp() {
         navigate('/home');
       }
     }
-}, [message])
+}, [])
 
   const handleEmailChange = event => {
     setEmail(event.target.value);
@@ -47,12 +46,12 @@ function SignUp() {
 
   const fetchUserData = async (e) => {
     e.preventDefault();
-    alert(JSON.stringify({ "email" : email, "password": password, "confirmPassword" : confirmPassword, "username": name, "phoneNumber" : phone}));
     const res = await fetch(url, { mode: 'cors', method: 'POST', headers: headers, body: JSON.stringify({ "email" : email, "password": password, "confirmPassword" : confirmPassword, "username": name, "phoneNumber" : phone})});
     if (res.status === 200) {
       const data = await res.text();
       localStorage.setItem("Token", data);
       localStorage.setItem("Role", jwtDecode(data).Role);
+      localStorage.setItem("Id", jwtDecode(data).Id);
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -60,11 +59,9 @@ function SignUp() {
         showConfirmButton: false,
         timer: 1500
       });
-      alert("Successfully!");
       navigate('/home');
     } else {
       const data = await res.text();
-      setMessage(data);
       Swal.fire({
           icon: 'error',
           title: 'Oops...',
