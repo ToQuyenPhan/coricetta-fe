@@ -1,9 +1,9 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Header from "../../components/Header";
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
+import AdminHeader from "../../components/AdminHeader";
 
 function RecipeReport() {
     const [recipe, setRecipe] = useState(null);
@@ -92,12 +92,25 @@ function RecipeReport() {
     }
 
     useEffect(() => {
-        fetchRecipeData();
-    }, []);
+        if (localStorage.getItem('Role') && localStorage.getItem('Token')) {
+            var role = localStorage.getItem('Role');
+            if (role !== 'ADMIN') {
+                navigate('/');
+            }
+            fetchRecipeData();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'You do not have permission to view this page!'
+            })
+            navigate('/');
+        }
+    });
 
     return (
         <div className="w-full">
-            <Header />
+            <AdminHeader />
             {!recipe ? (
                 <div
                     style={{

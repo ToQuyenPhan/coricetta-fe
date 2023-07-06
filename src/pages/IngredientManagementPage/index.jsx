@@ -85,7 +85,9 @@ function Ingredients() {
         }
     }
 
-    const fetchCreateData = async () => {
+    const fetchCreateData = async (e) => {
+        setOpen(!open);
+        e.preventDefault();
         const res = await fetch(`https://localhost:44327/api/Ingredients/create`, {
             mode: "cors",
             method: "POST",
@@ -104,6 +106,7 @@ function Ingredients() {
                 showConfirmButton: false,
                 timer: 1500
             })
+            fetchIngredientData();
         } else {
             const data = await res.text();
             Swal.fire({
@@ -404,7 +407,7 @@ function Ingredients() {
                                         <h5 className="text-left ml-3 font-bold">Đơn vị:</h5>
                                         <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
                                             type="text" placeholder="Nhập đơn vị cho nguyên liệu!" onChange={handleMeasurementChange} value={measurement}
-                                            required minLength={1} maxLength={50} />
+                                            required minLength={1} maxLength={20} />
                                     </div>
                                     <div className="mb-4">
                                         <h5 className="text-left ml-3 font-bold">Lượng calo:</h5>

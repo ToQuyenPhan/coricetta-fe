@@ -20,11 +20,12 @@ function Menu() {
     const [description, setDescription] = useState('');
     const [mode, setMode] = useState('');
     const token = localStorage.getItem('Token');
+    const userId = localStorage.getItem("Id");
     const navigate = useNavigate();
     let modeStatus = 0;
 
     const fetchMenusData = async () => {
-        const res = await fetch("https://localhost:44327/api/Menus/all?currentPage=1&pageSize=8", {
+        const res = await fetch(`https://localhost:44327/api/Menus/all?userId=${userId}&currentPage=1&pageSize=8`, {
             mode: 'cors', method: 'GET', headers: new Headers({
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -56,6 +57,7 @@ function Menu() {
 
     const fetchCreateMenuData = async (e) => {
         setOpen(!open);
+        e.preventDefault();
         if (mode === "public") modeStatus = 1;
         const res = await fetch("https://localhost:44327/api/Menus/create",
             {
@@ -73,6 +75,7 @@ function Menu() {
                 showConfirmButton: false,
                 timer: 1500
             })
+            fetchMenusData();
         } else {
             const data = await res.text();
             Swal.fire({

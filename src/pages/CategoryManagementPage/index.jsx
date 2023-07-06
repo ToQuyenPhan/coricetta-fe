@@ -204,7 +204,7 @@ function Categories() {
                 size="small"
                 margin="dense"
             /> */}
-                <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các nguyên liệu:</h1>
+                <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các loại món ăn:</h1>
                 <div className='m-3'>
                     <Fragment className="grid place-items-center">
                         <Button onClick={handleOpen} variant="gradient" className="shadow-none">

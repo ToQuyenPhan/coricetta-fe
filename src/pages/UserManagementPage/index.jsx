@@ -255,7 +255,7 @@ const UserList = () => {
             <AdminHeader />
             <br />
             <Title title="User list" />
-            <h1 className="text-orange-600 fontbold text-4xl ml-5 mb-3 inline-block">Danh sách các người dùng:</h1>
+            <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các người dùng:</h1>
             <br />
             <Button
                 variant="contained"
