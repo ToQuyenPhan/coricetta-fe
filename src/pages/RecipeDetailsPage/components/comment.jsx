@@ -244,7 +244,7 @@ function Comment() {
                                     leaveFrom="opacity-100 scale-100"
                                     leaveTo="opacity-0 scale-95"
                                   >
-                                    <Popover.Panel className="absolute right-0 mt-2 w-48 overflow-hidden bg-white rounded-lg shadow-lg ring-1 ring-gray-300">
+                                    <Popover.Panel className="absolute right-0 mt-2 w-32 overflow-hidden bg-white rounded-lg shadow-lg ring-1 ring-gray-300">
                                       <Popover.Button
                                         onClick={() =>
                                           handleEditClick(
