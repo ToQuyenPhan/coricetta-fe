@@ -47,6 +47,10 @@ function UserProfile() {
       if (res.status === 200) {
         const data = await res.json();
         setProfile(data);
+        setName(data.userName);
+        setEmail(data.email);
+        setPassword(data.password);
+        setPhone(data.phoneNumber);
         console.log("data", JSON.stringify(data));
       }
     } else {
@@ -143,7 +147,7 @@ function UserProfile() {
     }
   };
 
-  const handleOpen = () => setOpen(!open);
+  const handleOpen = () => {setOpen(!open);}
 
   const handleNameChange = event => {
     setName(event.target.value);
