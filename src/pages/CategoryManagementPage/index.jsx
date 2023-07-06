@@ -23,19 +23,17 @@ import {
 } from "@material-tailwind/react";
 import AdminHeader from '../../components/AdminHeader';
 
-function Ingredients() {
-    const [ingredients, setIngredients] = useState([]);
+function Categories() {
+    const [categories, setCategories] = useState([]);
     const [open, setOpen] = useState(false);
     const [name, setName] = useState('');
-    const [measurement, setMeasurement] = useState('');
-    const [calo, setCalo] = useState(0);
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingId, setIsEditingId] = useState(0);
     const navigate = useNavigate();
     const token = localStorage.getItem('Token');
 
-    const fetchIngredientData = async () => {
-        const res = await fetch("https://localhost:44327/api/Ingredients/all", {
+    const fetchCategoryData = async () => {
+        const res = await fetch("https://localhost:44327/api/Categories/all", {
             mode: "cors",
             method: "GET",
             headers: new Headers({
@@ -46,7 +44,7 @@ function Ingredients() {
         });
         if (res.status === 200) {
             const data = await res.json();
-            setIngredients(data);
+            setCategories(data);
         } else {
             const data = await res.text();
             Swal.fire({
@@ -58,7 +56,7 @@ function Ingredients() {
     };
 
     const fetchUpdateData = async () => {
-        const res = await fetch(`https://localhost:44327/api/Ingredients/update?ingredientId=${isEditingId}`, {
+        const res = await fetch(`https://localhost:44327/api/Categories/update?categoryId=${isEditingId}`, {
             mode: "cors",
             method: "PUT",
             headers: new Headers({
@@ -66,12 +64,12 @@ function Ingredients() {
                 "Content-Type": "application/json",
                 Accept: "application/json",
             }),
-            body: JSON.stringify({ "ingredientName": name, "measurement": measurement, "calories": calo, "status": 1 })
+            body: JSON.stringify({ "categoryName": name, "status": 1 })
         });
         if (res.status === 200) {
             setIsEditing(false);
             setIsEditingId(0);
-            fetchIngredientData();
+            fetchCategoryData();
         } else {
             const data = await res.text();
             Swal.fire({
@@ -82,8 +80,10 @@ function Ingredients() {
         }
     }
 
-    const fetchCreateData = async () => {
-        const res = await fetch(`https://localhost:44327/api/Ingredients/create`, {
+    const fetchCreateData = async (e) => {
+        setOpen(!open);
+        e.preventDefault();
+        const res = await fetch(`https://localhost:44327/api/Categories/create`, {
             mode: "cors",
             method: "POST",
             headers: new Headers({
@@ -91,16 +91,17 @@ function Ingredients() {
                 "Content-Type": "application/json",
                 Accept: "application/json",
             }),
-            body: JSON.stringify({ "ingredientName": name, "measurement": measurement, "calories": calo, "status": 1 })
+            body: JSON.stringify({ "categoryName": name, "status": 1 })
         });
         if (res.status === 200) {
             Swal.fire({
                 position: 'center',
                 icon: 'success',
-                title: 'Tạo nguyên liệu thành công!',
+                title: 'Tạo loại món ăn thành công!',
                 showConfirmButton: false,
                 timer: 1500
             })
+            fetchCategoryData();
         } else {
             const data = await res.text();
             Swal.fire({
@@ -115,20 +116,10 @@ function Ingredients() {
         setName(event.target.value);
     };
 
-    const handleMeasurementChange = event => {
-        setMeasurement(event.target.value);
-    };
-
-    const handleCaloChange = event => {
-        setCalo(event.target.value);
-    };
-
     const handleEditClick = (id, name, measurement, calo) => {
         setIsEditing(true);
         setIsEditingId(id);
         setName(name);
-        setMeasurement(measurement);
-        setCalo(calo);
     }
 
     const handleCancelClick = () => {
@@ -139,14 +130,12 @@ function Ingredients() {
     const handleOpen = () => {
         setOpen(!open);
         setName('');
-        setMeasurement('');
-        setCalo(0);
     }
 
     const handleDeleteClick = async (id) => {
         Swal.fire({
-            title: 'Bạn có chắc chắn xóa nguyên liệu này không?',
-            text: "Nguyên liệu này sẽ bị xóa vĩnh viễn!",
+            title: 'Bạn có chắc chắn xóa loại món ăn này không?',
+            text: "Loại món ăn này sẽ bị xóa vĩnh viễn!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -154,7 +143,7 @@ function Ingredients() {
             confirmButtonText: 'Delete'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const res = await fetch(`https://localhost:44327/api/Ingredients/delete?ingredientId=${id}`, {
+                const res = await fetch(`https://localhost:44327/api/Categories/delete?categoryId=${id}`, {
                     mode: "cors",
                     method: "DELETE",
                     headers: new Headers({
@@ -167,11 +156,11 @@ function Ingredients() {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Xóa nguyên liệu thành công!',
+                        title: 'Xóa loại món ăn thành công!',
                         showConfirmButton: false,
                         timer: 1500
                     })
-                    fetchIngredientData();
+                    fetchCategoryData();
                 } else {
                     const data = await res.text();
                     Swal.fire({
@@ -190,7 +179,7 @@ function Ingredients() {
             if (role !== 'ADMIN') {
                 navigate('/');
             }
-            fetchIngredientData();
+            fetchCategoryData();
         } else {
             Swal.fire({
                 icon: 'error',
@@ -222,26 +211,14 @@ function Ingredients() {
                             <BsFillPlusCircleFill size={30} color="green" />
                         </Button>
                         <Dialog open={open} handler={handleOpen} className="max-w-[1000px] text-center ">
-                            <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Tạo Nguyên Liệu Mới</h2></DialogHeader>
+                            <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Tạo Loại Món Ăn Mới</h2></DialogHeader>
                             <DialogBody divider>
                                 <form id="create" onSubmit={fetchCreateData}>
                                     <div className="mb-4">
-                                        <h5 className="text-left ml-3 font-bold">Tên nguyên liệu:</h5>
+                                        <h5 className="text-left ml-3 font-bold">Tên loại món ăn:</h5>
                                         <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
-                                            type="text" placeholder="Nhập tên cho nguyên liệu mới của bạn!" onChange={handleNameChange} value={name}
+                                            type="text" placeholder="Nhập tên cho loại món ăn mới của bạn!" onChange={handleNameChange} value={name}
                                             required minLength={5} maxLength={50} />
-                                    </div>
-                                    <div className="mb-4">
-                                        <h5 className="text-left ml-3 font-bold">Đơn vị:</h5>
-                                        <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
-                                            type="text" placeholder="Nhập đơn vị cho nguyên liệu!" onChange={handleMeasurementChange} value={measurement}
-                                            required minLength={1} maxLength={50} />
-                                    </div>
-                                    <div className="mb-4">
-                                        <h5 className="text-left ml-3 font-bold">Lượng calo:</h5>
-                                        <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
-                                            type="number" placeholder="Nhập lượng calo cho nguyên liệu!" onChange={handleCaloChange} value={calo}
-                                            required min={0} />
                                     </div>
                                 </form>
                             </DialogBody>
@@ -266,45 +243,25 @@ function Ingredients() {
                         <TableHead>
                             <TableRow>
                                 <TableCell>#</TableCell>
-                                <TableCell>Tên nguyên liệu</TableCell>
-                                <TableCell>Đơn vị</TableCell>
-                                <TableCell>Lượng calo/ gram</TableCell>
+                                <TableCell>Tên loại món ăn</TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {ingredients.map(ingredient => (
-                                <TableRow key={ingredient.id}>
-                                    <TableCell>{ingredient.id}</TableCell>
+                            {categories.map(category => (
+                                <TableRow key={category.id}>
+                                    <TableCell>{category.id}</TableCell>
                                     <TableCell>
-                                        {isEditing && parseInt(isEditingId) === parseInt(ingredient.id) ? (
+                                        {isEditing && parseInt(isEditingId) === parseInt(category.id) ? (
                                             <div><input type='text' className='w-full border-2 border-black' value={name}
                                                 onChange={handleNameChange} required minLength={5} maxLength={50}
                                                 placeholder='Nhập tên nguyên liệu!' /></div>
                                         ) : (
-                                            <div>{ingredient.ingredientName}</div>
+                                            <div>{category.categoryName}</div>
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        {isEditing && parseInt(isEditingId) === parseInt(ingredient.id) ? (
-                                            <div><input type='text' className='w-full border-2 border-black' value={measurement}
-                                                onChange={handleMeasurementChange} required minLength={1} maxLength={50}
-                                                placeholder='Nhập đơn vị cho nguyên liệu!' /></div>
-                                        ) : (
-                                            <div>{ingredient.measurement}</div>
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        {isEditing && parseInt(isEditingId) === parseInt(ingredient.id) ? (
-                                            <div><input type='number' className='w-full border-2 border-black' value={calo}
-                                                onChange={handleCaloChange} required min={0}
-                                                placeholder='Nhập lượng calo cho nguyên liệu!' /></div>
-                                        ) : (
-                                            <div>{ingredient.calories}</div>
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        {isEditing && parseInt(isEditingId) === parseInt(ingredient.id) ? (
+                                        {isEditing && parseInt(isEditingId) === parseInt(category.id) ? (
                                             <div>
                                                 <span onClick={handleCancelClick} className='hover:underline hover:cursor-pointer'>Hủy</span>
                                                 <span onClick={fetchUpdateData} className='hover:underline hover:cursor-pointer ml-2'>Chỉnh sửa</span>
@@ -312,9 +269,9 @@ function Ingredients() {
                                         ) : (
                                             <div>
                                                 <span
-                                                    onClick={() => handleEditClick(ingredient.id, ingredient.ingredientName, ingredient.measurement, ingredient.calories)}
+                                                    onClick={() => handleEditClick(category.id, category.categoryName)}
                                                     className='hover:underline hover:cursor-pointer'>Chỉnh sửa</span>
-                                                <span onClick={() => handleDeleteClick(ingredient.id)} className='hover:underline hover:cursor-pointer ml-5'>Xóa</span>
+                                                <span onClick={() => handleDeleteClick(category.id)} className='hover:underline hover:cursor-pointer ml-5'>Xóa</span>
                                             </div>
                                         )}
                                     </TableCell>
@@ -332,4 +289,4 @@ function Ingredients() {
     );
 }
 
-export default Ingredients;
+export default Categories;
