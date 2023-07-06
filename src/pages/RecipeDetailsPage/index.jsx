@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { BsShare, BsShareFill } from 'react-icons/bs';
 import { BiSolidFlag, BiLike, BiSolidLike, BiSolidEdit, BiCart } from 'react-icons/bi';
 import { MdDeleteForever } from 'react-icons/md';
 import axios from "axios";
@@ -13,12 +14,17 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import Swal from 'sweetalert2';
+import {
+  FacebookIcon,
+  FacebookShareButton
+} from "react-share";
 
 function RecipeDetail() {
   const [recipe, setRecipe] = useState(null);
   const [open, setOpen] = useState(false);
   const [isReported, setIsReported] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [isShared, setIsShared] = useState(false);
   const [authorId, setAuthorId] = useState('');
   const [like, setLike] = useState(null);
   const [description, setDescription] = useState('');
@@ -96,7 +102,7 @@ function RecipeDetail() {
   };
 
   const fetchLikeData = async () => {
-    const res = await fetch(`https://localhost:44327/api/Actions/getLike?userId=${userId}&recipeId=${recipeId}&Type=0`,
+    const res = await fetch(`https://localhost:44327/api/Actions/getAction?userId=${userId}&recipeId=${recipeId}&Type=0`,
       {
         mode: 'cors', method: 'GET', headers: new Headers({
           'Authorization': `Bearer ${token}`,
@@ -107,6 +113,21 @@ function RecipeDetail() {
       const data = await res.json();
       setIsLiked(true);
       setLike(data);
+    }
+  }
+
+  const fetchShareData = async () => {
+    const res = await fetch(`https://localhost:44327/api/Actions/getAction?userId=${userId}&recipeId=${recipeId}&Type=3`,
+      {
+        mode: 'cors', method: 'GET', headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        })
+      });
+    if (res.status === 200) {
+      const data = await res.json();
+      setIsShared(true);
+      //setLike(data);
     }
   }
 
@@ -170,6 +191,28 @@ function RecipeDetail() {
     }
   };
 
+  const handleShareClick = async (event) => {
+    event.preventDefault();
+    const res = await fetch("https://localhost:44327/api/Actions/create",
+      {
+        mode: 'cors', method: 'POST', headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({ "recipeId": recipeId, "type": 3, "content": null })
+      });
+    if (res.status === 200) {
+      fetchShareData();
+    } else {
+      const data = await res.text();
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: data
+      })
+    }
+  };
+
   const handleDislikeClick = async (event) => {
     event.preventDefault();
     const res = await fetch(`https://localhost:44327/api/Actions?actionId=${like.id}`,
@@ -198,6 +241,10 @@ function RecipeDetail() {
   const handleEditClick = (id) => {
     navigate("/edit", { state: { recipeId: id } });
   }
+
+  const getUser = (id) => {
+    navigate("/profile", { state: { newUserId: id } });
+  };
 
   useEffect(() => {
     fetchRecipeData();
@@ -298,7 +345,7 @@ function RecipeDetail() {
                           </div>)}
                         <h3 className="quote">{recipe?.recipeName}</h3>
                         <span className="text-muted mr-3 mb-4">
-                          Tác giả: <span className="font-bold">{recipe?.userName}</span>
+                          Tác giả: <span onClick={() => getUser(recipe.userId)} className="font-bold hover:cursor-pointer">{recipe?.userName}</span>
                         </span>
                         <p className="my-3">Mô tả: {recipe?.description}</p>
                         <img
@@ -345,20 +392,50 @@ function RecipeDetail() {
                         {parseInt(userId) !== parseInt(authorId) ? (
                           <div className=" mt-5">
                             <h3>Đánh giá:</h3>
-                            {isLiked ? (
-                              <Button onClick={handleDislikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                            <div className="flex">
+                              {isLiked ? (
+                                <Button onClick={handleDislikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
                         hover:cursor-pointer hover:text-blue-600 gap-2">
-                                <span >Like</span>
-                                <BiSolidLike size={30} />
-                              </Button>
-                            ) : (
-                              <Button onClick={handleLikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                                  <span >Like</span>
+                                  <BiSolidLike size={30} />
+                                </Button>
+                              ) : (
+                                <Button onClick={handleLikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
                         hover:cursor-pointer hover:text-blue-600 gap-2">
-                                <span >Like</span>
-                                <BiLike size={30} />
-                              </Button>
-                            )}
+                                  <span >Like</span>
+                                  <BiLike size={30} />
+                                </Button>
+                              )}
+                              <div>
+                                {isShared ? (
+                                  <Button variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                                    hover:cursor-pointer hover:text-blue-600 gap-2">
+                                    <span >Share</span>
+                                    <BsShareFill size={30} />
+                                  </Button>
+                                ) : (
+                                  <Button onClick={handleShareClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                        hover:cursor-pointer hover:text-blue-600 gap-2">
+                                    <span >Share</span>
+                                    <BsShare size={30} />
+                                  </Button>
+                                )}
 
+                              </div>
+                              <div>
+                                <FacebookShareButton
+                                  url={"https://github.com/thanhht3001"}
+                                  quote={"CoRicetta"}
+                                  picture={
+                                    "https://pixabay.com/photos/football-sport-play-competition-4455306/"
+                                  }
+                                  className="Demo__some-network__share-button flex  text-blue-800 justify-center items-center hover:cursor-pointer hover:text-blue-600 gap-2"
+                                >
+                                  <span >Share on Facebook</span>
+                                  <FacebookIcon size={32} round />
+                                </FacebookShareButton>
+                              </div>
+                            </div>
                           </div>
                         ) : (
                           <div></div>

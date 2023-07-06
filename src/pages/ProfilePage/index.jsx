@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from "../../components/Header";
 //import 'bootstrap/dist/js/bootstrap.min.js';
@@ -16,8 +16,10 @@ import { BiSolidEdit } from 'react-icons/bi';
 
 
 function UserProfile() {
+  const [recipes, setRecipes] = useState([]);
   const [profile, setProfile] = useState(null);
   const [open, setOpen] = useState(false);
+  const [isAuthor, setIsAuthor] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,30 +27,87 @@ function UserProfile() {
   const token = localStorage.getItem("Token");
   const userId = localStorage.getItem("Id");
   const navigate = useNavigate();
+  const location = useLocation();
+  const newUserId = location.state?.newUserId;
 
   const fetchProfileData = async () => {
-    const res = await fetch(
-      `https://localhost:44327/api/Users/byId?userId=${userId}`,
-      {
-        mode: "cors",
-        method: "GET",
-        headers: new Headers({
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        }),
+    if (newUserId === undefined) {
+      const res = await fetch(
+        `https://localhost:44327/api/Users/byId?userId=${userId}`,
+        {
+          mode: "cors",
+          method: "GET",
+          headers: new Headers({
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }),
+        }
+      );
+      if (res.status === 200) {
+        const data = await res.json();
+        setProfile(data);
+        console.log("data", JSON.stringify(data));
       }
-    );
-    if (res.status === 200) {
-      const data = await res.json();
-      setProfile(data);
-      setName(data.userName);
-      setEmail(data.email);
-      setPassword(data.password);
-      setPhone(data.phoneNumber);
-      console.log("data", JSON.stringify(data));
+    } else {
+      const res = await fetch(
+        `https://localhost:44327/api/Users/byId?userId=${newUserId}`,
+        {
+          mode: "cors",
+          method: "GET",
+          headers: new Headers({
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }),
+        }
+      );
+      if (res.status === 200) {
+        const data = await res.json();
+        setProfile(data);
+        console.log("data", JSON.stringify(data));
+      }
     }
+  };
 
+  const fetchSharedRecipeData = async () => {
+    if (newUserId === undefined) {
+      const res = await fetch(
+        `https://localhost:44327/api/Recipes/shared?userId=${userId}`,
+        {
+          mode: "cors",
+          method: "GET",
+          headers: new Headers({
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }),
+        }
+      );
+      if (res.status === 200) {
+        const data = await res.json();
+        setRecipes(data.items);
+        console.log("data", JSON.stringify(data));
+      }
+    } else {
+      const res = await fetch(
+        `https://localhost:44327/api/Recipes/shared?userId=${newUserId}`,
+        {
+          mode: "cors",
+          method: "GET",
+          headers: new Headers({
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }),
+        }
+      );
+      if (res.status === 200) {
+        const data = await res.json();
+        setRecipes(data.items);
+        console.log("data", JSON.stringify(data));
+      }
+    }
   };
 
   const fetchUpdateMenuData = async (e) => {
@@ -60,8 +119,10 @@ function UserProfile() {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }),
-        body: JSON.stringify({ "userId": userId, "userName": name, "email": email, "password": password, "phoneNumber": phone, 
-          "role": "USER", "status": 1})
+        body: JSON.stringify({
+          "userId": userId, "userName": name, "email": email, "password": password, "phoneNumber": phone,
+          "role": "USER", "status": 1
+        })
       });
     if (res.status === 200) {
       Swal.fire({
@@ -100,13 +161,21 @@ function UserProfile() {
     setPhone(event.target.value);
   };
 
+  const getRecipe = (id) => {
+    navigate("/recipeDetails", { state: { recipeId: id } });
+  };
+
   useEffect(() => {
     if (localStorage) {
       var role = localStorage.getItem("Role");
       if (role !== "USER") {
         navigate("/");
       } else {
+        if (newUserId === undefined) {
+          setIsAuthor(true);
+        }
         fetchProfileData();
+        fetchSharedRecipeData();
       }
     }
   }, []);
@@ -135,11 +204,15 @@ function UserProfile() {
                   <div className="card-body text-center relative">
                     <div className="absolute top-1 right-1 hover:text-white flex">
                       <Fragment className="grid place-items-center">
-                        <Button onClick={handleOpen} variant="gradient" className="shadow-none text-black flex justify-center items-center 
-                        hover:cursor-pointer hover:text-yellow-300">
-                          <span >Chỉnh sửa hồ sơ</span>
-                          <BiSolidEdit size={30} />
-                        </Button>
+                        {isAuthor ? (
+                          <Button onClick={handleOpen} variant="gradient" className="shadow-none text-black flex justify-center items-center 
+                          hover:cursor-pointer hover:text-yellow-300">
+                            <span >Chỉnh sửa hồ sơ</span>
+                            <BiSolidEdit size={30} />
+                          </Button>
+                        ) : (
+                          <div></div>
+                        )}
                         <Dialog open={open} handler={handleOpen} className="max-w-[1000px] text-center ">
 
                           <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Chỉnh Sửa Hồ Sơ</h2></DialogHeader>
@@ -324,6 +397,44 @@ function UserProfile() {
                 </div>
               </div>
             </div> */}
+                <div>
+                  {recipes?.length > 0 && (
+                    <div><h1 className=" font-bold text-2xl">Các công thức đã chia sẻ</h1>
+                      <div className="max-w-[1640px] mx-auto p-4 py-4 grid md:grid-cols-2 gap-6">
+                        {recipes.map((recipe) => (
+                          <div key={recipe?.id} className="rounded-xl relative">
+                            {/* Overlay */}
+                            <div className="absolute w-full h-full bg-black/50 rounded-xl text-white">
+                              <p className="font-bold text-2xl px-2 pt-4">
+                                {recipe?.recipeName}
+                              </p>
+                              <p className="px-2">Tác giả: {recipe?.userName}</p>
+                              <p className="px-2">Độ khó: {recipe?.level}</p>
+                              <span className="px-2">Loại:</span>
+                              {recipe.categories.map((category) => (
+                                <span key={category?.id} className="px-2">
+                                  {category?.categoryName}
+                                </span>
+                              ))}
+                              <br></br>
+                              <button
+                                onClick={() => getRecipe(recipe?.id)}
+                                className="border border-white rounded-xl px-5 py-1 bg-white text-black mx-2 absolute bottom-4"
+                              >
+                                Xem chi tiết!
+                              </button>
+                            </div>
+                            <img
+                              className="max-h-[150px] md:max-h-[200px] w-full object-cover rounded-xl"
+                              src={recipe?.image}
+                              alt="/"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
