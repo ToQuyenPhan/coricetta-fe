@@ -47,9 +47,6 @@ function Header() {
                 showConfirmButton: false,
                 timer: 1500
             })
-            setName('');
-            setMeasurement('');
-            setCalo(0);
         } else {
             const data = await res.text();
             Swal.fire({
@@ -58,6 +55,9 @@ function Header() {
                 text: data
             })
         }
+        setName('');
+        setMeasurement('');
+        setCalo(0);
     }
 
     const handleSearch = () => {
@@ -155,7 +155,7 @@ function Header() {
                                                         <h5 className="text-left ml-3 font-bold">Đơn vị:</h5>
                                                         <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
                                                             type="text" placeholder="Nhập đơn vị cho nguyên liệu!" onChange={handleMeasurementChange} value={measurement}
-                                                            required minLength={1} maxLength={50} />
+                                                            required minLength={1} maxLength={20} />
                                                     </div>
                                                     <div className="mb-4">
                                                         <h5 className="text-left ml-3 font-bold">Lượng calo:</h5>
