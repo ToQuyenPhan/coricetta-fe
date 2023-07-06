@@ -101,7 +101,7 @@ function SignUp() {
                 </div>
                 <div className="mb-4">
                   <input className='border border-gray-300 p-3 w-full rounded-3xl font-sans text-base text-black focus:outline-0' 
-                  type='text' placeholder="Phone number" required onChange={handlePhoneChange} value={phone} />
+                  type='text' placeholder="Phone number" required onChange={handlePhoneChange} value={phone} minLength={10} maxLength={11} />
                 </div>
                 <div className="mb-4">
                   <button className=' bg-gray-700 p-3 w-full rounded-3xl font-sans text-base text-white hover:bg-gray-500' type='submit'>Sign Up</button>
