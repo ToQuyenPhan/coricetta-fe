@@ -369,14 +369,26 @@ function RecipeDetail() {
                               <li key={index}>{category.categoryName}</li>
                             ))}
                           </ul>
-                          <h3>Các nguyên liệu:</h3>
-                          {recipe.ingredients.map((ingredient) => (
-                            <li className="lowercase" key={ingredient.id}>
-                              {ingredient?.quantity} &nbsp;
-                              {ingredient?.measurement} &nbsp;
-                              {ingredient?.ingredientName} &nbsp;
-                            </li>
-                          ))}
+                          <div className="grid md:grid-cols-2">
+                            <div>
+                              <h3>Các nguyên liệu:</h3>
+                              {recipe.ingredients.map((ingredient) => (
+                                <li className="lowercase" key={ingredient.id}>
+                                  {ingredient?.quantity} &nbsp;
+                                  {ingredient?.measurement} &nbsp;
+                                  {ingredient?.ingredientName} &nbsp;
+                                </li>
+                              ))}
+                            </div>
+                            <div className="text-center">
+                              <h3>Thông tin dinh dưỡng:</h3>
+                              {recipe.ingredients.map((ingredient) => (
+                                <li className="list-none" key={ingredient.id}>
+                                  {ingredient?.calories} Calo
+                                </li>
+                              ))}
+                            </div>
+                          </div>
                         </div>
 
                         <div className="mt-4">
