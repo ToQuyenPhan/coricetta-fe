@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Title, useGetList } from 'react-admin';
 import Swal from 'sweetalert2';
 import { BsFillPlusCircleFill } from 'react-icons/bs';
+import { MdNotificationsActive, MdNotifications } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import {
     Card,
@@ -25,7 +26,9 @@ import AdminHeader from '../../components/AdminHeader';
 
 function Ingredients() {
     const [ingredients, setIngredients] = useState([]);
+    const [requests, setRequests] = useState([]);
     const [open, setOpen] = useState(false);
+    const [openRequest, setOpenRequest] = useState(false);
     const [name, setName] = useState('');
     const [measurement, setMeasurement] = useState('');
     const [calo, setCalo] = useState(0);
@@ -111,6 +114,29 @@ function Ingredients() {
         }
     }
 
+    const fetchRequestData = async () => {
+        const res = await fetch("https://localhost:44327/api/Ingredients/request", {
+            mode: "cors",
+            method: "GET",
+            headers: new Headers({
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            }),
+        });
+        if (res.status === 200) {
+            const data = await res.json();
+            setRequests(data);
+        } else {
+            const data = await res.text();
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data
+            })
+        }
+    };
+
     const handleNameChange = event => {
         setName(event.target.value);
     };
@@ -141,6 +167,10 @@ function Ingredients() {
         setName('');
         setMeasurement('');
         setCalo(0);
+    }
+
+    const handleOpenRequest = () => {
+        setOpenRequest(!openRequest);
     }
 
     const handleDeleteClick = async (id) => {
@@ -184,6 +214,79 @@ function Ingredients() {
         })
     }
 
+    const handleApproveClick = async (newId, newName, newMeasurement, newCalo) => {
+        setOpenRequest(!openRequest);
+        const res = await fetch(`https://localhost:44327/api/Ingredients/update?ingredientId=${newId}`, {
+            mode: "cors",
+            method: "PUT",
+            headers: new Headers({
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            }),
+            body: JSON.stringify({ "ingredientName": newName, "measurement": newMeasurement, "calories": newCalo, "status": 1 })
+        });
+        if (res.status === 200) {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Phê duyệt thành công!',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            fetchIngredientData();
+        } else {
+            const data = await res.text();
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data
+            })
+        }
+    }
+
+    const handleRejectClick = async (id) => {
+        setOpenRequest(!openRequest);
+        Swal.fire({
+            title: 'Bạn có chắc chắn từ chối nguyên liệu này không?',
+            text: "Nguyên liệu này sẽ bị xóa vĩnh viễn!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Reject'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const res = await fetch(`https://localhost:44327/api/Ingredients/delete?ingredientId=${id}`, {
+                    mode: "cors",
+                    method: "DELETE",
+                    headers: new Headers({
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    })
+                });
+                if (res.status === 200) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Đã từ chối nguyên liệu!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    fetchIngredientData();
+                } else {
+                    const data = await res.text();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data
+                    })
+                }
+            }
+        })
+    }
+
     useEffect(() => {
         if (localStorage.getItem('Role') && localStorage.getItem('Token')) {
             var role = localStorage.getItem('Role');
@@ -191,6 +294,7 @@ function Ingredients() {
                 navigate('/');
             }
             fetchIngredientData();
+            fetchRequestData();
         } else {
             Swal.fire({
                 icon: 'error',
@@ -215,7 +319,72 @@ function Ingredients() {
                 size="small"
                 margin="dense"
             /> */}
-                <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các nguyên liệu:</h1>
+                <div className='grid md:grid-cols-2'>
+                    <div>
+                        <h1 className="text-orange-600 font-bold text-4xl ml-5 mb-3 inline-block">Danh sách các nguyên liệu:</h1>
+                    </div>
+                    <div className='text-end'>
+                        <Fragment className="grid place-items-center">
+                            {requests?.length > 0 ? (
+                                <Button onClick={handleOpenRequest} variant="gradient" className="shadow-none">
+                                    <MdNotificationsActive size={30} color="green" />
+                                </Button>
+                            ) : (
+                                <Button onClick={handleOpenRequest} variant="gradient" className="shadow-none">
+                                    <MdNotifications size={30} color="green" />
+                                </Button>
+                            )}
+                            <Dialog open={openRequest} handler={handleOpenRequest} className="max-w-[1000px] text-center ">
+                                <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Danh sách các nguyên liệu được yêu cầu</h2></DialogHeader>
+                                <DialogBody divider>
+                                    <div>
+                                        {requests?.length > 0 && (
+                                            <div>
+                                                <div>
+                                                    <Card>
+                                                        <Table sx={{ padding: 2 }} size="small">
+                                                            <TableHead>
+                                                                <TableRow>
+                                                                    <TableCell>Tên nguyên liệu</TableCell>
+                                                                    <TableCell>Đơn vị</TableCell>
+                                                                    <TableCell>Lượng calo/ gram</TableCell>
+                                                                    <TableCell></TableCell>
+                                                                </TableRow>
+                                                            </TableHead>
+                                                            <TableBody>
+                                                                {requests.map(request => (
+                                                                    <TableRow key={request.id}>
+                                                                        <TableCell>{request.ingredientName}</TableCell>
+                                                                        <TableCell>{request.measurement}</TableCell>
+                                                                        <TableCell>{request.calories}</TableCell>
+                                                                        <TableCell>
+                                                                            <Button onClick={() => handleRejectClick(request.id)} variant="contained" className=' bg-red-600 p-1 hover:bg-red-400'>Từ chối</Button>
+                                                                            <Button onClick={() => handleApproveClick(request.id, request.ingredientName, request.measurement, request.calories)} variant="contained" className=' bg-green-600 p-1 hover:bg-green-400 ml-3'>Phê duyệt</Button>
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                ))}
+                                                            </TableBody>
+                                                        </Table>
+                                                    </Card>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </DialogBody>
+                                <DialogFooter className="flex justify-end">
+                                    <Button
+                                        variant="text"
+                                        color="red"
+                                        onClick={handleOpenRequest}
+                                        className="mr-3"
+                                    >
+                                        <span className="text-xl">Đóng</span>
+                                    </Button>
+                                </DialogFooter>
+                            </Dialog>
+                        </Fragment>
+                    </div>
+                </div>
                 <div className='m-3'>
                     <Fragment className="grid place-items-center">
                         <Button onClick={handleOpen} variant="gradient" className="shadow-none">
