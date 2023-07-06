@@ -18,6 +18,7 @@ import RecipeCreate from './pages/CreateRecipePage';
 import RecipeReport from './pages/RecipeReportPage';
 import Edit from './pages/EditRecipePage';
 import ShoppingList from './pages/ShoppingListPage';
+import Ingredients from './pages/IngredientManagementPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -38,6 +39,7 @@ root.render(
       <Route exact path="/report" element={<RecipeReport/>}/>
       <Route exact path="/edit" element={<Edit/>}/>
       <Route exact path="/shopping" element={<ShoppingList/>}/>
+      <Route exact path="/ingredients" element={<Ingredients/>}/>
     </Routes>
   </BrowserRouter>
 );

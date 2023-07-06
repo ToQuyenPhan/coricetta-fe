@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { AiOutlineMenu, AiOutlineSearch, AiOutlineLogout } from 'react-icons/ai'
 import { MdOutlineMenuBook, MdOutlineRestaurantMenu } from 'react-icons/md'
+import { GiCabbage } from 'react-icons/gi';
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Popover, Transition } from '@headlessui/react'
 import { BsFillPersonFill } from 'react-icons/bs';
@@ -40,6 +41,9 @@ function AdminHeader() {
                     </Link>
                     <Link to="/reports" className="text-sm font-semibold leading-6 text-gray-900 no-underline flex items-center gap-1">
                         <BiSolidReport size={20} /><span>Reports</span>
+                    </Link>
+                    <Link to="/ingredients" className="text-sm font-semibold leading-6 text-gray-900 no-underline flex items-center gap-1">
+                        <GiCabbage size={20} /><span>Ingredients</span>
                     </Link>
                     <Link to="/" className="text-sm font-semibold leading-6 text-gray-900 no-underline flex items-center gap-1">
                                     <AiOutlineLogout size={20} />
