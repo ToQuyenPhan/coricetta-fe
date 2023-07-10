@@ -497,7 +497,7 @@ function Ingredients() {
                 </Card>
                 <Toolbar>
                     {/* {page > 1 && <Button onClick={() => setPage(page - 1)}>Previous page</Button>}
-                {page < total / perPage && <Button onClick={() => setPage(page + 1)}>Next page</Button>} */}
+                    {page < total / perPage && <Button onClick={() => setPage(page + 1)}>Next page</Button>} */}
                 </Toolbar>
             </div>
         </div>

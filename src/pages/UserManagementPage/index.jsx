@@ -10,6 +10,7 @@ import {
     TableRow,
     TableBody,
     TableCell,
+    Toolbar,
     Dialog,
     DialogTitle,
     DialogContent,
@@ -17,159 +18,19 @@ import {
     TextField,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-
 import AdminHeader from '../../components/AdminHeader';
-
-const UserUpdatePopup = ({ open, handleClose, user }) => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [password, setPassword] = useState('');
-    const [status, setStatus] = useState('');
-    const [role, setRole] = useState('');
-    const token = localStorage.getItem('Token');
-
-    useEffect(() => {
-        if (user) {
-            setName(user.userName || '');
-            setEmail(user.email || '');
-            setPhone(user.phoneNumber || '');
-            setPassword(user.password || '');
-            setStatus(user.status || '');
-            setRole(user.role || '');
-        } else {
-            setName('');
-            setEmail('');
-            setPhone('');
-            setPassword('');
-            setStatus('');
-            setRole('');
-        }
-    }, [user]);
-
-    const handleFormSubmit = async (event) => {
-        event.preventDefault();
-
-
-        if (!name || !email || !phone || !password || !status || !role) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Vui lòng điền đầy đủ thông tin!',
-            });
-            return;
-        }
-
-        const res = await fetch('https://localhost:44327/api/Users/update', {
-            mode: 'cors',
-            method: 'PUT',
-            headers: new Headers({
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            }),
-            body: JSON.stringify({
-                userName: name,
-                email,
-                password,
-                phoneNumber: phone,
-                role,
-                status
-            })
-        });
-
-        if (res.ok) {
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Chỉnh sửa hồ sơ thành công!',
-                showConfirmButton: false,
-                timer: 1500
-            });
-        } else {
-            const data = await res.text();
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: data
-            });
-        }
-        handleClose();
-    };
-
-    return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Update User</DialogTitle>
-            <DialogContent>
-                <form onSubmit={handleFormSubmit}>
-                    <TextField 
-                        label="Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        fullWidth
-                        required
-                    />
-                    <TextField
-                        label="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        fullWidth
-                        required
-                    />
-                    <TextField
-                        label="Phone Number"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        fullWidth
-                        required
-                    />
-                    <TextField
-                        label="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        fullWidth
-                        required
-                    />
-
-                    <TextField
-                        label="Status"
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
-                        fullWidth
-                        required
-                    />
-                    <TextField
-                        label="Role"
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                        fullWidth
-                        required
-                    />
-                    <DialogActions>
-                        <Button onClick={handleClose} color="primary">
-                            Cancel
-                        </Button>
-                        <Button type="submit" color="primary">
-                            Update
-                        </Button>
-                    </DialogActions>
-                </form>
-            </DialogContent>
-        </Dialog>
-    );
-};
 
 const UserList = () => {
     const [visiblePasswords, setVisiblePasswords] = useState([]);
     const [users, setUsers] = useState([]);
-    const [openPopup, setOpenPopup] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
-
+    const [currentPage, setCurrentPage] = useState(0);
+    const [hasNext, setHasNext] = useState(false);
+    const [hasPrevious, setHasPrevious] = useState(false);
     const token = localStorage.getItem('Token');
     const navigate = useNavigate();
 
     const fetchUserData = async () => {
-        const res = await fetch('https://localhost:44327/api/Users/all?currentPage=1&pageSize=8', {
+        const res = await fetch('https://localhost:44327/api/Users/all?currentPage=1&pageSize=10', {
             mode: 'cors',
             method: 'GET',
             headers: {
@@ -181,6 +42,9 @@ const UserList = () => {
             const data = await res.json();
             setUsers(data.items);
             setVisiblePasswords(new Array(data.items.length).fill(false));
+            setHasNext(data.hasNext);
+            setHasPrevious(data.hasPrevious);
+            setCurrentPage(data.currentPage);
         }
     };
 
@@ -210,7 +74,7 @@ const UserList = () => {
                         showConfirmButton: false,
                         timer: 1500,
                     });
-                   fetchUserData();
+                    fetchUserData();
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -222,6 +86,44 @@ const UserList = () => {
             }
         });
     };
+
+    const fetchPrevious = async () => {
+        const res = await fetch(`https://localhost:44327/api/Users/all?currentPage=${currentPage - 1}&pageSize=10`, {
+            mode: 'cors',
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        if (res.ok) {
+            const data = await res.json();
+            setUsers(data.items);
+            setVisiblePasswords(new Array(data.items.length).fill(false));
+            setHasNext(data.hasNext);
+            setHasPrevious(data.hasPrevious);
+            setCurrentPage(data.currentPage);
+        }
+    }
+
+    const fetchNext = async () => {
+        const res = await fetch(`https://localhost:44327/api/Users/all?currentPage=${currentPage + 1}&pageSize=10`, {
+            mode: 'cors',
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        if (res.ok) {
+            const data = await res.json();
+            setUsers(data.items);
+            setVisiblePasswords(new Array(data.items.length).fill(false));
+            setHasNext(data.hasNext);
+            setHasPrevious(data.hasPrevious);
+            setCurrentPage(data.currentPage);
+        }
+    }
 
     useEffect(() => {
         if (localStorage.getItem('Role') && localStorage.getItem('Token')) {
@@ -324,7 +226,10 @@ const UserList = () => {
                     </TableBody>
                 </Table>
             </Card>
-
+            <Toolbar>
+                <Button type='button' disabled={!hasPrevious} onClick={fetchPrevious}>Previous page</Button>
+                <Button type='button' disabled={!hasNext} onClick={fetchNext}>Next page</Button>
+            </Toolbar>
         </div>
     );
 };
