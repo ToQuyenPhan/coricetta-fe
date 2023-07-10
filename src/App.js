@@ -37,9 +37,7 @@ function App() {
   };
 
   function onChange(value) {
-    if(value !== undefined){
       setVerified(true);
-    }
   };
 
   const fetchUserData = async (e) => {

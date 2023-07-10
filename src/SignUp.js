@@ -3,6 +3,7 @@ import { useState } from "react";
 import Swal from 'sweetalert2';
 import { useNavigate, Link } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
+import ReCAPTCHA from "react-google-recaptcha";
 
 function SignUp() {
   const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ function SignUp() {
   const [confirmPassword, setConfirmPasword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [verified, setVerified] = useState(false);
   const navigate = useNavigate();
 
   let headers = new Headers();
@@ -43,6 +45,10 @@ function SignUp() {
   const handlePhoneChange = event => {
     setPhone(event.target.value);
   };
+
+  function onChange(value) {
+    setVerified(true);
+};
 
   const fetchUserData = async (e) => {
     e.preventDefault();
@@ -100,8 +106,14 @@ function SignUp() {
                   <input className='border border-gray-300 p-3 w-full rounded-3xl font-sans text-base text-black focus:outline-0' 
                   type='text' placeholder="Phone number" required onChange={handlePhoneChange} value={phone} />
                 </div>
+                <div className='flex justify-center'>
+                  <ReCAPTCHA
+                    sitekey="6LcXX7ceAAAAAPYPH8EzPWO1rZl946Sj6Qgu7xZT"
+                    onChange={onChange}
+                  />
+                </div>
                 <div className="mb-4">
-                  <button className=' bg-gray-700 p-3 w-full rounded-3xl font-sans text-base text-white hover:bg-gray-500' type='submit'>Sign Up</button>
+                  <button className=' bg-gray-700 mt-3 p-3 w-full rounded-3xl font-sans text-base text-white hover:bg-gray-500' type='submit' disabled={!verified}>Sign Up</button>
                 </div>
                 <div className='text-center'>
                     <p className='text-black inline-block'>
