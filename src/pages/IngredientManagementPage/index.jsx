@@ -34,6 +34,7 @@ function Ingredients() {
     const [calo, setCalo] = useState(0);
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingId, setIsEditingId] = useState(0);
+    const [filter, setFilterString] = ('');
     const navigate = useNavigate();
     const token = localStorage.getItem('Token');
 
@@ -288,7 +289,7 @@ function Ingredients() {
                 }
             }
         })
-    }
+    };
 
     useEffect(() => {
         if (localStorage.getItem('Role') && localStorage.getItem('Token')) {
@@ -313,11 +314,11 @@ function Ingredients() {
             <AdminHeader />
             <br />
             <div>
-                <Title title="Book list" />
-                {/* <TextField
+                {/* <Title title="Book list" />
+                <TextField
                 label="Search"
                 value={filter}
-                onChange={e => setFilter(e.target.value)}
+                onChange={setFilter}
                 variant="filled"
                 size="small"
                 margin="dense"
