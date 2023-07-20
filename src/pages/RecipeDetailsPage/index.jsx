@@ -1,11 +1,13 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { BsShare, BsShareFill } from 'react-icons/bs';
-import { BiSolidFlag, BiLike, BiSolidLike, BiSolidEdit, BiCart } from 'react-icons/bi';
+import { BiSolidFlag, BiLike, BiSolidLike, BiSolidEdit, BiCart, BiHeart } from 'react-icons/bi';
 import { MdDeleteForever } from 'react-icons/md';
 import axios from "axios";
 import Header from "../../components/Header";
 import Comment from "./components/comment";
+import Select from "react-select";
+
 import {
   Button,
   Dialog,
@@ -18,21 +20,78 @@ import {
   FacebookIcon,
   FacebookShareButton
 } from "react-share";
+import { stringify } from "uuid";
 
 function RecipeDetail() {
   const [recipe, setRecipe] = useState(null);
   const [open, setOpen] = useState(false);
+  const [openAddRecipe, setOpenAddRecipe] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState();
   const [isReported, setIsReported] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isShared, setIsShared] = useState(false);
   const [authorId, setAuthorId] = useState('');
   const [like, setLike] = useState(null);
   const [description, setDescription] = useState('');
+  const [menus, setMenus] = useState([]);
   const token = localStorage.getItem("Token");
   const userId = localStorage.getItem("Id");
   const navigate = useNavigate();
   const location = useLocation();
   const recipeId = location.state?.recipeId;
+
+  const menuExceptLists = menus?.map((menu) => {
+    return { value: menu.id, label: menu.menuName };
+  });
+  
+const handleSelectMenu = (data) => {
+  setSelectedMenu(data);
+};
+
+const handleAddRecipe = async (e) => {
+  setOpenAddRecipe(!openAddRecipe);
+  e.preventDefault();
+  const res = await fetch(`https://localhost:44327/api/Menus/addRecipe?menuId=${selectedMenu.value}&recipeId=${recipeId}`,
+    {
+      mode: 'cors', method: 'POST', headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      })
+    });
+  if (res.status === 200) {
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Lưu thành công!',
+      showConfirmButton: false,
+      timer: 1500
+    });
+    navigate("/home");
+  } else {
+    const data = await res.text();
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: data
+    })
+  }
+};
+
+  const fetchMenusData = async () => {
+    const res = await fetch(`https://localhost:44327/api/Menus/allByUserIdExceptRecipeAdded?userId=${userId}&recipeId=${recipeId}`, {
+        mode: 'cors', method: 'GET', headers: new Headers({
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        })
+    });
+    if (res.status === 200) {
+        const data = await res.json();
+        setMenus(data);
+        console.log("menu", JSON.stringify(data));
+    }
+}
+
+
 
   const fetchRecipeData = () => {
     let config = {
@@ -234,6 +293,9 @@ function RecipeDetail() {
 
   const handleOpen = () => setOpen(!open);
 
+  const handleOpenAddRecipe = () => setOpenAddRecipe(!open);
+
+
   const handleDescriptionChange = event => {
     setDescription(event.target.value);
   };
@@ -250,6 +312,7 @@ function RecipeDetail() {
     fetchRecipeData();
     fetchReportedRecipeData();
     fetchLikeData();
+    fetchMenusData();
   }, []);
 
   return (
@@ -288,6 +351,11 @@ function RecipeDetail() {
                                 </div>
                               ) : (
                                 <div className="flex">
+                                  <Button onClick={() => handleOpenAddRecipe(recipe.id)} variant="gradient" className="shadow-none text-black flex justify-center items-center 
+                                hover:cursor-pointer hover:text-green-600">
+                                    <span >Lưu</span>
+                                    <BiHeart size={30} />
+                                  </Button>
                                   <Button onClick={handleOpen} variant="gradient" className="shadow-none text-yellow-400 hover:text-red-600 flex justify-center items-center 
                                 hover:cursor-pointer">
                                     <span >Báo cáo</span>
@@ -302,7 +370,6 @@ function RecipeDetail() {
                               )}
 
                               <Dialog open={open} handler={handleOpen} className="max-w-[1000px] text-center ">
-
                                 <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Báo cáo công thức</h2></DialogHeader>
                                 <DialogBody divider>
                                   <form id="report" onSubmit={fetchReportRecipeData}>
@@ -328,10 +395,48 @@ function RecipeDetail() {
                                   </Button>
                                 </DialogFooter>
                               </Dialog>
+                              <Dialog open={openAddRecipe} handler={handleOpenAddRecipe} className="max-w-[500px] text-center ">
+
+                                <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Lưu {recipe?.recipeName} vào menu:</h2></DialogHeader>
+                                <DialogBody divider>
+                                  <form id="addrecipe" onSubmit={handleAddRecipe}>
+                                    <div className="mb-4">
+                                      <h5 className="text-left ml-3 font-bold">Menu:</h5>
+                                        <Select
+                                  required
+                                  className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                  options={menuExceptLists}
+                                  placeholder="Menu"
+                                  value={selectedMenu}
+                                  onChange={handleSelectMenu} 
+                                />
+                                    </div>
+                                  </form>
+                                </DialogBody>
+                                <DialogFooter className="flex justify-end">
+                                  <Button
+                                    variant="text"
+                                    color="red"
+                                    onClick={handleOpenAddRecipe}
+                                    className="mr-3"
+                                  >
+                                    <span className="text-xl">Hủy bỏ</span>
+                                  </Button>
+                                  <Button type="submit" variant="gradient" className=" bg-green-600 px-3 py-1" form="addrecipe">
+                                    <span className="text-xl">Lưu</span>
+                                  </Button>
+                                </DialogFooter>
+                              </Dialog>
                             </Fragment>
                           </div>
                         ) : (
                           <div className="w-fit float-right flex">
+                            <Fragment className="grid place-items-center">
+                            <Button onClick={() => handleOpenAddRecipe(recipe.id)} variant="gradient" className="shadow-none text-black flex justify-center items-center 
+                                hover:cursor-pointer hover:text-green-600">
+                                    <span >Lưu</span>
+                                    <BiHeart size={30} />
+                                  </Button>
                             <Button onClick={() => handleEditClick(recipe.id)} variant="gradient" className="shadow-none text-black flex justify-center items-center 
                         hover:cursor-pointer hover:text-gray-600">
                               <span >Chỉnh sửa</span>
@@ -342,6 +447,40 @@ function RecipeDetail() {
                               <span >Xóa</span>
                               <MdDeleteForever size={30} />
                             </Button>
+
+                            <Dialog open={openAddRecipe} handler={handleOpenAddRecipe} className="max-w-[500px] text-center ">
+
+                                <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Lưu {recipe?.recipeName} vào menu:</h2></DialogHeader>
+                                <DialogBody divider>
+                                  <form id="addrecipe" onSubmit={handleAddRecipe}>
+                                    <div className="mb-4">
+                                      <h5 className="text-left ml-3 font-bold">Menu:</h5>
+                                        <Select
+                                  required
+                                  className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                  options={menuExceptLists}
+                                  placeholder="Menu"
+                                  value={selectedMenu}
+                                  onChange={handleSelectMenu} 
+                                />
+                                    </div>
+                                  </form>
+                                </DialogBody>
+                                <DialogFooter className="flex justify-end">
+                                  <Button
+                                    variant="text"
+                                    color="red"
+                                    onClick={handleOpenAddRecipe}
+                                    className="mr-3"
+                                  >
+                                    <span className="text-xl">Hủy bỏ</span>
+                                  </Button>
+                                  <Button type="submit" variant="gradient" className=" bg-green-600 px-3 py-1" form="addrecipe">
+                                    <span className="text-xl">Lưu</span>
+                                  </Button>
+                                </DialogFooter>
+                              </Dialog>
+                              </Fragment>
                           </div>)}
                         <h3 className="quote">{recipe?.recipeName}</h3>
                         <span className="text-muted mr-3 mb-4">
