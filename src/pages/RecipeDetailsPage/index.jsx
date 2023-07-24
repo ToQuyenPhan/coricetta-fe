@@ -43,53 +43,56 @@ function RecipeDetail() {
   const menuExceptLists = menus?.map((menu) => {
     return { value: menu.id, label: menu.menuName };
   });
-  
-const handleSelectMenu = (data) => {
-  setSelectedMenu(data);
-};
 
-const handleAddRecipe = async (e) => {
-  setOpenAddRecipe(!openAddRecipe);
-  e.preventDefault();
-  const res = await fetch(`https://localhost:44327/api/Menus/addRecipe?menuId=${selectedMenu.value}&recipeId=${recipeId}`,
-    {
-      mode: 'cors', method: 'POST', headers: new Headers({
+  const handleSelectMenu = (data) => {
+    setSelectedMenu(data);
+  };
+
+  const handleAddRecipe = async (e) => {
+    setOpenAddRecipe(!openAddRecipe);
+    e.preventDefault();
+    const res = await fetch(`https://localhost:44327/api/Menus/addRecipe?menuId=${selectedMenu.value}&recipeId=${recipeId}`,
+      {
+        mode: 'cors', method: 'POST', headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        })
+      });
+    if (res.status === 200) {
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Lưu thành công!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      fetchRecipeData();
+      fetchReportedRecipeData();
+      fetchLikeData();
+      fetchMenusData();
+    } else {
+      const data = await res.text();
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: data
+      })
+    }
+  };
+
+  const fetchMenusData = async () => {
+    const res = await fetch(`https://localhost:44327/api/Menus/allByUserIdExceptRecipeAdded?userId=${userId}&recipeId=${recipeId}`, {
+      mode: 'cors', method: 'GET', headers: new Headers({
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       })
     });
-  if (res.status === 200) {
-    Swal.fire({
-      position: 'center',
-      icon: 'success',
-      title: 'Lưu thành công!',
-      showConfirmButton: false,
-      timer: 1500
-    });
-    navigate("/home");
-  } else {
-    const data = await res.text();
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: data
-    })
-  }
-};
-
-  const fetchMenusData = async () => {
-    const res = await fetch(`https://localhost:44327/api/Menus/allByUserIdExceptRecipeAdded?userId=${userId}&recipeId=${recipeId}`, {
-        mode: 'cors', method: 'GET', headers: new Headers({
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        })
-    });
     if (res.status === 200) {
-        const data = await res.json();
-        setMenus(data);
-        console.log("menu", JSON.stringify(data));
+      const data = await res.json();
+      setMenus(data);
+      console.log("menu", JSON.stringify(data));
     }
-}
+  }
 
 
 
@@ -293,7 +296,7 @@ const handleAddRecipe = async (e) => {
 
   const handleOpen = () => setOpen(!open);
 
-  const handleOpenAddRecipe = () => setOpenAddRecipe(!open);
+  const handleOpenAddRecipe = () => setOpenAddRecipe(!openAddRecipe);
 
 
   const handleDescriptionChange = event => {
@@ -395,6 +398,7 @@ const handleAddRecipe = async (e) => {
                                   </Button>
                                 </DialogFooter>
                               </Dialog>
+
                               <Dialog open={openAddRecipe} handler={handleOpenAddRecipe} className="max-w-[500px] text-center ">
 
                                 <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Lưu {recipe?.recipeName} vào menu:</h2></DialogHeader>
@@ -402,14 +406,14 @@ const handleAddRecipe = async (e) => {
                                   <form id="addrecipe" onSubmit={handleAddRecipe}>
                                     <div className="mb-4">
                                       <h5 className="text-left ml-3 font-bold">Menu:</h5>
-                                        <Select
-                                  required
-                                  className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
-                                  options={menuExceptLists}
-                                  placeholder="Menu"
-                                  value={selectedMenu}
-                                  onChange={handleSelectMenu} 
-                                />
+                                      <Select
+                                        required
+                                        className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                        options={menuExceptLists}
+                                        placeholder="Menu"
+                                        value={selectedMenu}
+                                        onChange={handleSelectMenu}
+                                      />
                                     </div>
                                   </form>
                                 </DialogBody>
@@ -420,7 +424,7 @@ const handleAddRecipe = async (e) => {
                                     onClick={handleOpenAddRecipe}
                                     className="mr-3"
                                   >
-                                    <span className="text-xl">Hủy bỏ</span>
+                                    <span className="text-xl" onClick={() => setOpenAddRecipe(!openAddRecipe)}>Hủy bỏ</span>
                                   </Button>
                                   <Button type="submit" variant="gradient" className=" bg-green-600 px-3 py-1" form="addrecipe">
                                     <span className="text-xl">Lưu</span>
@@ -432,37 +436,37 @@ const handleAddRecipe = async (e) => {
                         ) : (
                           <div className="w-fit float-right flex">
                             <Fragment className="grid place-items-center">
-                            <Button onClick={() => handleOpenAddRecipe(recipe.id)} variant="gradient" className="shadow-none text-black flex justify-center items-center 
+                              <Button onClick={() => handleOpenAddRecipe(recipe.id)} variant="gradient" className="shadow-none text-black flex justify-center items-center 
                                 hover:cursor-pointer hover:text-green-600">
-                                    <span >Lưu</span>
-                                    <BiHeart size={30} />
-                                  </Button>
-                            <Button onClick={() => handleEditClick(recipe.id)} variant="gradient" className="shadow-none text-black flex justify-center items-center 
+                                <span >Lưu</span>
+                                <BiHeart size={30} />
+                              </Button>
+                              <Button onClick={() => handleEditClick(recipe.id)} variant="gradient" className="shadow-none text-black flex justify-center items-center 
                         hover:cursor-pointer hover:text-gray-600">
-                              <span >Chỉnh sửa</span>
-                              <BiSolidEdit size={30} />
-                            </Button>
-                            <Button onClick={handleDeleteClick} variant="gradient" className="shadow-none text-red-600 flex justify-center items-center 
+                                <span >Chỉnh sửa</span>
+                                <BiSolidEdit size={30} />
+                              </Button>
+                              <Button onClick={handleDeleteClick} variant="gradient" className="shadow-none text-red-600 flex justify-center items-center 
                         hover:cursor-pointer hover:text-gray-600">
-                              <span >Xóa</span>
-                              <MdDeleteForever size={30} />
-                            </Button>
+                                <span >Xóa</span>
+                                <MdDeleteForever size={30} />
+                              </Button>
 
-                            <Dialog open={openAddRecipe} handler={handleOpenAddRecipe} className="max-w-[500px] text-center ">
+                              <Dialog open={openAddRecipe} handler={handleOpenAddRecipe} className="max-w-[500px] text-center ">
 
                                 <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Lưu {recipe?.recipeName} vào menu:</h2></DialogHeader>
                                 <DialogBody divider>
                                   <form id="addrecipe" onSubmit={handleAddRecipe}>
                                     <div className="mb-4">
                                       <h5 className="text-left ml-3 font-bold">Menu:</h5>
-                                        <Select
-                                  required
-                                  className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
-                                  options={menuExceptLists}
-                                  placeholder="Menu"
-                                  value={selectedMenu}
-                                  onChange={handleSelectMenu} 
-                                />
+                                      <Select
+                                        required
+                                        className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
+                                        options={menuExceptLists}
+                                        placeholder="Menu"
+                                        value={selectedMenu}
+                                        onChange={handleSelectMenu}
+                                      />
                                     </div>
                                   </form>
                                 </DialogBody>
@@ -473,14 +477,14 @@ const handleAddRecipe = async (e) => {
                                     onClick={handleOpenAddRecipe}
                                     className="mr-3"
                                   >
-                                    <span className="text-xl">Hủy bỏ</span>
+                                    <span className="text-xl" onClick={() => setOpenAddRecipe(!openAddRecipe)}>Hủy bỏ</span>
                                   </Button>
                                   <Button type="submit" variant="gradient" className=" bg-green-600 px-3 py-1" form="addrecipe">
                                     <span className="text-xl">Lưu</span>
                                   </Button>
                                 </DialogFooter>
                               </Dialog>
-                              </Fragment>
+                            </Fragment>
                           </div>)}
                         <h3 className="quote">{recipe?.recipeName}</h3>
                         <span className="text-muted mr-3 mb-4">
@@ -540,56 +544,62 @@ const handleAddRecipe = async (e) => {
                             ))}
                           </ol>
                         </div>
-                        {parseInt(userId) !== parseInt(authorId) ? (
-                          <div className=" mt-5">
-                            <h3>Đánh giá:</h3>
-                            <div className="flex">
-                              {isLiked ? (
-                                <Button onClick={handleDislikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
-                        hover:cursor-pointer hover:text-blue-600 gap-2">
-                                  <span >Like</span>
-                                  <BiSolidLike size={30} />
-                                </Button>
-                              ) : (
-                                <Button onClick={handleLikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
-                        hover:cursor-pointer hover:text-blue-600 gap-2">
-                                  <span >Like</span>
-                                  <BiLike size={30} />
-                                </Button>
-                              )}
-                              <div>
-                                {isShared ? (
-                                  <Button variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
-                                    hover:cursor-pointer hover:text-blue-600 gap-2">
-                                    <span >Share</span>
-                                    <BsShareFill size={30} />
-                                  </Button>
-                                ) : (
-                                  <Button onClick={handleShareClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
-                        hover:cursor-pointer hover:text-blue-600 gap-2">
-                                    <span >Share</span>
-                                    <BsShare size={30} />
-                                  </Button>
-                                )}
-
-                              </div>
-                              <div>
-                                <FacebookShareButton
-                                  url={"https://github.com/thanhht3001"}
-                                  quote={"CoRicetta"}
-                                  picture={
-                                    "https://pixabay.com/photos/football-sport-play-competition-4455306/"
-                                  }
-                                  className="Demo__some-network__share-button flex  text-blue-800 justify-center items-center hover:cursor-pointer hover:text-blue-600 gap-2"
-                                >
-                                  <span >Share on Facebook</span>
-                                  <FacebookIcon size={32} round />
-                                </FacebookShareButton>
-                              </div>
-                            </div>
-                          </div>
-                        ) : (
+                        {isReported ? (
                           <div></div>
+                        ) : (
+                          <div>
+                            {parseInt(userId) !== parseInt(authorId) ? (
+                              <div className=" mt-5">
+                                <h3>Đánh giá:</h3>
+                                <div className="flex">
+                                  {isLiked ? (
+                                    <Button onClick={handleDislikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                        hover:cursor-pointer hover:text-blue-600 gap-2">
+                                      <span >Like</span>
+                                      <BiSolidLike size={30} />
+                                    </Button>
+                                  ) : (
+                                    <Button onClick={handleLikeClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                        hover:cursor-pointer hover:text-blue-600 gap-2">
+                                      <span >Like</span>
+                                      <BiLike size={30} />
+                                    </Button>
+                                  )}
+                                  <div>
+                                    {isShared ? (
+                                      <Button variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                                    hover:cursor-pointer hover:text-blue-600 gap-2">
+                                        <span >Share</span>
+                                        <BsShareFill size={30} />
+                                      </Button>
+                                    ) : (
+                                      <Button onClick={handleShareClick} variant="gradient" className="shadow-none text-blue-800 flex justify-center items-center 
+                        hover:cursor-pointer hover:text-blue-600 gap-2">
+                                        <span >Share</span>
+                                        <BsShare size={30} />
+                                      </Button>
+                                    )}
+
+                                  </div>
+                                  <div>
+                                    <FacebookShareButton
+                                      url={"https://github.com/thanhht3001"}
+                                      quote={"CoRicetta"}
+                                      picture={
+                                        "https://pixabay.com/photos/football-sport-play-competition-4455306/"
+                                      }
+                                      className="Demo__some-network__share-button flex  text-blue-800 justify-center items-center hover:cursor-pointer hover:text-blue-600 gap-2"
+                                    >
+                                      <span >Share on Facebook</span>
+                                      <FacebookIcon size={32} round />
+                                    </FacebookShareButton>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div></div>
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>

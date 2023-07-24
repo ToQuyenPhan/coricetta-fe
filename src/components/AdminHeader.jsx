@@ -37,20 +37,20 @@ function AdminHeader() {
             <div className="flex items-center justify-between p-6">
                 <Popover.Group className="hidden lg:flex lg:gap-x-12">
                     <Link to="/users" className="text-sm font-semibold leading-6 text-gray-900 no-underline flex items-center gap-1">
-                        <BsFillPersonFill size={20} /><span>Users</span>
+                        <BsFillPersonFill size={20} /><span>Người dùng</span>
                     </Link>
                     <Link to="/reports" className="text-sm font-semibold leading-6 text-gray-900 no-underline flex items-center gap-1">
-                        <BiSolidReport size={20} /><span>Reports</span>
+                        <BiSolidReport size={20} /><span>Báo cáo</span>
                     </Link>
                     <Link to="/ingredients" className="text-sm font-semibold leading-6 text-gray-900 no-underline flex items-center gap-1">
-                        <GiCabbage size={20} /><span>Ingredients</span>
+                        <GiCabbage size={20} /><span>Nguyên liệu</span>
                     </Link>
                     <Link to="/categories" className="text-sm font-semibold leading-6 text-gray-900 no-underline flex items-center gap-1">
-                        <MdFastfood size={20} /><span>Categories</span>
+                        <MdFastfood size={20} /><span>Loại món ăn</span>
                     </Link>
                     <Link to="/" className="text-sm font-semibold leading-6 text-gray-900 no-underline flex items-center gap-1">
                                     <AiOutlineLogout size={20} />
-                                    <span>Log out</span>
+                                    <span>Đăng xuất</span>
                                 </Link>
                 </Popover.Group>
             </div>

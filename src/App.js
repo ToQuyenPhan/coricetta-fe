@@ -48,6 +48,7 @@ function App() {
       localStorage.setItem("Token", data);
       localStorage.setItem("Role", jwtDecode(data).Role);
       localStorage.setItem("Id", jwtDecode(data).Id);
+      localStorage.setItem("Name", jwtDecode(data).Username);
       Swal.fire({
         position: 'center',
         icon: 'success',

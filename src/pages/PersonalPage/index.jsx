@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { BsFillPlusCircleFill } from 'react-icons/bs';
 import Header from "../../components/Header";
+import EmptyBox from '../../assets/empty.png';
 
 function MyRecipe() {
-  const [recipes, setRecipe] = useState([]);
+  const [recipes, setRecipes] = useState([]);
   const token = localStorage.getItem("Token");
   const location = useLocation();
   const recipeId = location.state?.recipeId;
-  const userId = location.state?.userId;
+  const userId = localStorage.getItem("Id");
   const navigate = useNavigate();
 
   const fetchRecipeData = async () => {
     const res = await fetch(
-      `https://localhost:44327/api/Recipes/all?userId=1&currentPage=1&pageSize=10`,
+      `https://localhost:44327/api/Recipes/all?userId=${userId}&currentPage=1&pageSize=10`,
       {
         mode: "cors",
         method: "GET",
@@ -26,7 +27,7 @@ function MyRecipe() {
     );
     if (res.status === 200) {
       const data = await res.json();
-      setRecipe(data.items);
+      setRecipes(data.items);
       console.log("data", JSON.stringify(data));
     }
   };
@@ -49,17 +50,18 @@ function MyRecipe() {
   return (
     <div>
       <Header />
-      <div className="mt-5">
-        <div>
-          <h1 className="text-orange-600 font-bold text-4xl mb-3 inline-block">Danh sách các thực đơn của bạn:</h1>
-          <h2 className="inline-block float-right font-bold mr-3">Tổng cộng {recipes.length} công thức</h2>
-        </div>
-        <div className="ml-5 mt-3 w-fit">
-          <Link to="/create">
-            <BsFillPlusCircleFill size={30} color="green" />
-          </Link>
-        </div>
-        {recipes?.length > 0 && (
+      {recipes?.length > 0 ? (
+        <div className="mt-5">
+          <div>
+            <h1 className="text-orange-600 font-bold text-4xl mb-3 inline-block">Danh sách các thực đơn của bạn:</h1>
+            <h2 className="inline-block float-right font-bold mr-3">Tổng cộng {recipes?.length} công thức</h2>
+          </div>
+          <div className="ml-5 mt-3 w-fit">
+            <Link to="/create">
+              <BsFillPlusCircleFill size={30} color="green" />
+            </Link>
+          </div>
+
           <div className="max-w-[1640px] mx-auto p-4 py-12 grid md:grid-cols-3 gap-6">
             {recipes.map((recipe) => (
               <div key={recipe?.id} className="rounded-xl relative">
@@ -93,8 +95,34 @@ function MyRecipe() {
               </div>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="mt-5">
+          <div>
+            <h1 className="text-orange-600 font-bold text-4xl mb-3 inline-block">Danh sách các thực đơn của bạn:</h1>
+            <h2 className="inline-block float-right font-bold mr-3">Tổng cộng 0 công thức</h2>
+          </div>
+          <div className="ml-5 mt-3 w-fit">
+            <Link to="/create">
+              <BsFillPlusCircleFill size={30} color="green" />
+            </Link>
+          </div>
+          <div className="my-5">
+          {/* <div>
+            <h2 className="text-center font-bold mr-3">Không tìm thấy công thức nào!</h2>
+          </div> */}
+          <br />
+          <br />
+          <br />
+          <div className="flex justify-center items-center">
+            <img src={EmptyBox} alt="..." width={300} height={300} />
+          </div>
+          <br />
+          <br />
+          <br />
+        </div>
+        </div>
+      )}
     </div>
   );
 }

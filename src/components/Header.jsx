@@ -25,6 +25,7 @@ function Header() {
     const [calo, setCalo] = useState(0);
     const navigate = useNavigate();
     const token = localStorage.getItem('Token');
+    const username = localStorage.getItem('Name');
 
     const fetchCreateData = async (e) => {
         setOpen(!open);
@@ -108,7 +109,7 @@ function Header() {
                     </Link>
                     <Popover className="relative">
                         <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
-                            User
+                            {username}
                             <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
                         </Popover.Button>
                         <Transition
@@ -124,22 +125,22 @@ function Header() {
                                  bg-white shadow-lg ring-1 ring-gray-900/5">
                                 <Link to="/profile" className="px-3 py-2 text-center border-b flex gap-3 justify-center items-center">
                                     <BsPersonBoundingBox size={20} />
-                                    Profile
+                                    Hồ sơ
                                 </Link>
                                 <Link to="/my-recipes" className="px-3 py-2 text-center border-b flex gap-2 justify-center items-center">
                                     <MdOutlineRestaurantMenu size={20} />
-                                    My Recipes
+                                    Công thức của tôi
                                 </Link>
                                 <Link to="/my-menus" className="px-3 py-2 border-b flex gap-2 justify-center items-center no-underline
                                      text-black">
                                     <MdOutlineMenuBook size={20} />
-                                    My Menus
+                                    Menu của tôi
                                 </Link>
                                 <div className="px-3 py-2 text-center  border-b flex gap-3 justify-center items-center">
                                     <Fragment className="grid place-items-center">
                                         <Button onClick={handleOpen} variant="gradient" className="shadow-none text-base font-normal text-black flex gap-2">
                                             <GiCabbage size={20} />
-                                            Request New
+                                            Yêu cầu nguyên liệu
                                         </Button>
                                         <Dialog open={open} handler={handleOpen} className="max-w-[1000px] text-center ">
                                             <DialogHeader><h2 className="font-bold text-center w-full text-orange-600">Yêu Cầu Nguyên Liệu Mới</h2></DialogHeader>
@@ -149,7 +150,7 @@ function Header() {
                                                         <h5 className="text-left ml-3 font-bold">Tên nguyên liệu:</h5>
                                                         <input className='border border-gray-300 p-3 w-full rounded font-sans text-base text-black focus:outline-0'
                                                             type="text" placeholder="Nhập tên cho nguyên liệu mới của bạn!" onChange={handleNameChange} value={name}
-                                                            required minLength={5} maxLength={50} />
+                                                            required minLength={1} maxLength={50} />
                                                     </div>
                                                     <div className="mb-4">
                                                         <h5 className="text-left ml-3 font-bold">Đơn vị:</h5>
@@ -184,7 +185,7 @@ function Header() {
                                 <Link to="/" className="px-3 py-2 text-center border-b flex gap-3 justify-center items-center 
                                     no-underline text-black">
                                     <AiOutlineLogout size={20} />
-                                    Log out
+                                    Đăng xuất
                                 </Link>
                             </Popover.Panel>
                         </Transition>
