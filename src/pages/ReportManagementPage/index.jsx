@@ -82,7 +82,7 @@ function Reports(){
                                 <TableCell>Người báo cáo</TableCell>
                                 <TableCell>Công thức</TableCell>
                                 <TableCell>Mô tả</TableCell>
-                                <TableCell>Trạng thái</TableCell>
+                                {/* <TableCell>Trạng thái</TableCell> */}
                                 <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
@@ -92,7 +92,7 @@ function Reports(){
                                 <TableCell>{report.userName}</TableCell>
                                 <TableCell>{report.recipeName}</TableCell>
                                 <TableCell>{report.description}</TableCell>
-                                <TableCell>{report.status}</TableCell>
+                                {/* <TableCell>{report.status}</TableCell> */}
                                 <TableCell><button className=' text-blue-700' onClick={() => getRecipe(report.recipeId, report.userId)}>Xem chi tiết!</button></TableCell>
                             </TableRow>
                         ))}

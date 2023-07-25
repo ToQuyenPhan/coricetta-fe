@@ -110,6 +110,11 @@ function Comment() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (comment.trim() === '') {
+      // cancel process, whitespace found;
+
+      return;
+    }
     const res = await fetch("https://localhost:44327/api/Actions/create", {
       mode: "cors",
       method: "POST",

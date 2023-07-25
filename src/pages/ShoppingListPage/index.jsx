@@ -37,8 +37,9 @@ function ShoppingList() {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-full h-screen">
       <Header />
+      <br />
       {!recipe ? (
         <div
           style={{
@@ -54,8 +55,8 @@ function ShoppingList() {
           Đang tải...
         </div>
       ) : (
-        <section className="section blog-wrap bg-gray-300">
-          <div className="container bg-white">
+        <section className="section blog-wrap">
+          <div className="container bg-white mt-5 shadow-lg">
             <div className="row">
               <div className="col-lg-8">
                 <div className="row">

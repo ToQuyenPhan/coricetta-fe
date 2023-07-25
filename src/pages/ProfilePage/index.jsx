@@ -188,7 +188,7 @@ function UserProfile() {
     <div>
       <Header />
       {profile !== null ? (
-        <section style={{ backgroundColor: '#eee' }}>
+        <section>
           <div className="container py-5">
             {/* <div className="row">
           <div className="col">
@@ -205,7 +205,7 @@ function UserProfile() {
             <div className="row">
               <div className="col-lg-4">
                 <div className="card mb-4">
-                  <div className="card-body text-center relative">
+                  <div className="card-body text-center relative shadow-lg">
                     <div className="absolute top-1 right-1 hover:text-white flex">
                       <Fragment className="grid place-items-center">
                         {isAuthor ? (
@@ -307,7 +307,7 @@ function UserProfile() {
               </div>
               <div className="col-lg-8">
                 <div className="card mb-4">
-                  <div className="card-body">
+                  <div className="card-body shadow-lg">
                     <div className="row">
                       <div className="col-sm-3 inline-block">
                         <p className="mb-0 font-bold mr-5">Tên người dùng: </p>

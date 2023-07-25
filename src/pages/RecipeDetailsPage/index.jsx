@@ -527,7 +527,7 @@ function RecipeDetail() {
                               <h3>Thông tin dinh dưỡng:</h3>
                               {recipe.ingredients.map((ingredient) => (
                                 <li className="list-none" key={ingredient.id}>
-                                  {ingredient?.calories} Calo
+                                  {ingredient?.calories} Calo / {ingredient?.measurement}
                                 </li>
                               ))}
                             </div>

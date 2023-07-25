@@ -119,6 +119,22 @@ const RecipeCreate = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if(recipe.trim() === ''){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Bạn quên nhập tên công thức rồi!"
+            });
+            return;
+        }
+        if(description.trim() === ''){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Bạn quên nhập mô tả công thức rồi!"
+            });
+            return;
+        }
         if (imageUpload == null) {
             Swal.fire({
                 icon: 'error',
