@@ -49,8 +49,9 @@ const UserList = () => {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
+            cancelButtonText: 'Hủy',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Inactive',
+            confirmButtonText: 'Vô hiệu hóa',
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const res = await fetch(`https://localhost:44327/api/Users?userId=${userId}`, {
@@ -195,25 +196,31 @@ const UserList = () => {
                                     <Button variant="contained" color="primary" onClick={() => handleEditClick(user.id)}>
                                         Chỉnh sửa
                                     </Button>
-                                    {user.status === 1 ? (
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => handleDeleteClick(user.id)}
-                                            style={{ marginLeft: '15px' }}
-                                        >
-                                            Vô hiệu hóa
-                                        </Button>
+                                    {user.role !== 'ADMIN' ? (
+                                        <div className='inline-block'>
+                                            {user.status === 1 ? (
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() => handleDeleteClick(user.id)}
+                                                    style={{ marginLeft: '15px' }}
+                                                >
+                                                    Vô hiệu hóa
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() => handleDeleteClick(user.id)}
+                                                    style={{ marginLeft: '15px' }}
+                                                    disabled
+                                                >
+                                                    Đã vô hiệu hóa
+                                                </Button>
+                                            )}
+                                        </div>
                                     ) : (
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => handleDeleteClick(user.id)}
-                                            style={{ marginLeft: '15px' }}
-                                            disabled
-                                        >
-                                            Đã vô hiệu hóa
-                                        </Button>
+                                        <div></div>
                                     )}
                                 </TableCell>
                             </TableRow>

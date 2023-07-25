@@ -139,8 +139,9 @@ function Categories() {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
+            cancelButtonText: 'Hủy',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Delete'
+            confirmButtonText: 'Xóa'
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const res = await fetch(`https://localhost:44327/api/Categories/delete?categoryId=${id}`, {

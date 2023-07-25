@@ -199,9 +199,10 @@ function RecipeDetail() {
       text: "Công thức này sẽ bị xóa vĩnh viễn!",
       icon: 'warning',
       showCancelButton: true,
+      cancelButtonText: 'Hủy',
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Delete'
+      confirmButtonText: 'Xóa'
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = await fetch(`https://localhost:44327/api/Recipes/delete?recipeid=${recipeId}`, {
