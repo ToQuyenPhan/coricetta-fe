@@ -99,7 +99,7 @@ function MyRecipe() {
       ) : (
         <div className="mt-5">
           <div>
-            <h1 className="text-orange-600 font-bold text-4xl mb-3 inline-block">Danh sách các thực đơn của bạn:</h1>
+            <h1 className="text-orange-600 font-bold text-4xl mb-3 inline-block">Danh sách các công thức của bạn:</h1>
             <h2 className="inline-block float-right font-bold mr-3">Tổng cộng 0 công thức</h2>
           </div>
           <div className="ml-5 mt-3 w-fit">
