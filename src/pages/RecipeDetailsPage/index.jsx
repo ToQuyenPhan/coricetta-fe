@@ -316,6 +316,7 @@ function RecipeDetail() {
     fetchReportedRecipeData();
     fetchLikeData();
     fetchMenusData();
+    fetchShareData();
   }, []);
 
   return (
